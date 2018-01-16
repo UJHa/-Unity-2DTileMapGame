@@ -7,6 +7,7 @@ public class Monster : Character
     // Use this for initialization
     void Start()
     {
+        _type = eMapObjectType.MONSTER;
     }
 
     // Update is called once per frame

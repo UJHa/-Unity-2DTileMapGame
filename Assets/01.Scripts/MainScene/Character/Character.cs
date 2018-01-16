@@ -17,6 +17,7 @@ public class Character : MapObject {
     protected int _tileX = 0;
     protected int _tileY = 0;
 
+    protected int _attackPoint = 10;
     // Use this for initialization
     void Start () {
 		
@@ -28,6 +29,7 @@ public class Character : MapObject {
 	}
     public void Init(string viewName)
     {
+        SetCanMove(false);
         //View를 붙인다.
         string filePath = "Prefabs/CharacterView/" + viewName;
         GameObject characterViewPrefabs = Resources.Load<GameObject>(filePath);

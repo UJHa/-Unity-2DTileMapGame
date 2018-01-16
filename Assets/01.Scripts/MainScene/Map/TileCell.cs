@@ -44,4 +44,33 @@ public class TileCell
         List<MapObject> mapObjectList = _mapObjectMap[(int)mapObject.GetCurrentLayer()];
         mapObjectList.Remove(mapObject);
     }
+    public bool CanMove()
+    {
+        for (int layer = 0; layer < (int)eTileLayer.MAXCOUNT; layer++)
+        {
+            List<MapObject> objectList = _mapObjectMap[layer];
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                if (false == objectList[i].CanMove())
+                    return false;
+            }
+        }
+        return true;
+    }
+    public List<MapObject> GetCollisionList()
+    {
+        List<MapObject> collisionList = new List<MapObject>();
+        for (int layer = 0; layer < (int)eTileLayer.MAXCOUNT; layer++)
+        {
+            List<MapObject> objectList = _mapObjectMap[layer];
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                if (false == objectList[i].CanMove())
+                {
+                    collisionList.Add(objectList[i]);
+                }
+            }
+        }
+        return collisionList;
+    }
 }

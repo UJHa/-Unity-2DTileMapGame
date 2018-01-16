@@ -48,12 +48,36 @@ public class Player : Character
         _characterView.GetComponent<Animator>().SetTrigger(animationTrigger);
 
         TileMap map = GameManager.Instance.GetMap();
-        if (map.CanMoveTile(moveX, moveY))
+
+        List<MapObject> collisionList = map.GetCollisionList(moveX, moveY);
+        if(0==collisionList.Count)  //이동 가능할때
         {
             map.ResetObject(_tileX, _tileY, this);
             _tileX = moveX;
             _tileY = moveY;
             map.SetObject(_tileX, _tileY, this, eTileLayer.MIDDLE);
         }
+        else
+        {
+            for (int i = 0; i < collisionList.Count; i++)
+            {
+                switch(collisionList[i].GetObjectType())
+                {
+                    case eMapObjectType.MONSTER:
+                        Attack(collisionList[i]);
+                        break;
+                }
+            }
+        }
+    }
+    void Attack(MapObject enemy)
+    {
+        MessageParam msgParam = new MessageParam();
+        msgParam.sender = this;
+        msgParam.receiver = enemy;
+        msgParam.attackPoint = _attackPoint;
+        msgParam.message = "Attack";
+
+        MessageSystem.Instance.Send(msgParam);
     }
 }

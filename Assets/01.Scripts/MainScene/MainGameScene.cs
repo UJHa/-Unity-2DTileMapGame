@@ -15,8 +15,8 @@ public class MainGameScene : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-		
-	}
+        MessageSystem.Instance.ProcessMessage();
+    }
     void Init()
     {
         _tileMap.Init();
