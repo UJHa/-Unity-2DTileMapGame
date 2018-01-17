@@ -11,26 +11,15 @@ public class Player : Character
 	
 	// Update is called once per frame
 	void Update()
-    { 
-        eMoveDirection moveDirection = eMoveDirection.NONE;
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            moveDirection = eMoveDirection.LEFT;
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            moveDirection = eMoveDirection.RIGHT;
-        }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            moveDirection = eMoveDirection.UP;
-        }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            moveDirection = eMoveDirection.DOWN;
-        }
-        if (eMoveDirection.NONE != moveDirection)
-            Move(moveDirection);
+    {
+        if (false == _isLive)
+            return;
+        eMoveDirection moveDirection = _state.Update();
+        //moveState로 변환 예정
+        //if (eMoveDirection.NONE != moveDirection)
+        //{
+        //    Move(moveDirection);
+        //}
     }
     void Move(eMoveDirection moveDirection)
     {
@@ -69,15 +58,5 @@ public class Player : Character
                 }
             }
         }
-    }
-    void Attack(MapObject enemy)
-    {
-        MessageParam msgParam = new MessageParam();
-        msgParam.sender = this;
-        msgParam.receiver = enemy;
-        msgParam.attackPoint = _attackPoint;
-        msgParam.message = "Attack";
-
-        MessageSystem.Instance.Send(msgParam);
     }
 }

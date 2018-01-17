@@ -51,7 +51,7 @@ public class MapObject : MonoBehaviour {
     {
         return _tileLayer;
     }
-    bool _canMove = true;
+    protected bool _canMove = true;
     public bool CanMove()
     {
         return _canMove;
@@ -61,13 +61,14 @@ public class MapObject : MonoBehaviour {
         _canMove = canMove;
     }
     //Message
-    public void ReceiveObjectMessage(MessageParam msgParam)
+    virtual public void ReceiveObjectMessage(MessageParam msgParam)
     {
-        switch(msgParam.message)
-        {
-            case "Attack":
-                Debug.Log("Attacked : " + msgParam.attackPoint);
-                break;
-        }
+        //switch(msgParam.message)
+        //{
+        //    case "Attack":
+        //        //Debug.Log("Attacked : " + msgParam.attackPoint);
+        //        Damaged(msgParam.attackPoint);
+        //        break;
+        //}
     }
 }
