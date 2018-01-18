@@ -10,10 +10,9 @@ public class Monster : Character
         _type = eMapObjectType.MONSTER;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (false == _isLive)
-            return;
-    }
+    //void Update()
+    //{
+    //    if (false == _isLive)
+    //        return;
+    //}
 }

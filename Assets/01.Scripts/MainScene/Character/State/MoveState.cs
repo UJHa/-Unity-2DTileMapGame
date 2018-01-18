@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class MoveState : State
 {
-    override public eMoveDirection Update()
+    override public void Update()
     {
         base.Update();
-        return eMoveDirection.NONE;
     }
 
     override public void Start()
@@ -25,42 +24,25 @@ public class MoveState : State
 
         if (false == _character.MoveStart(moveX, moveY))
         {
-            TileMap map = GameManager.Instance.GetMap();
+            _nextState = eStateType.ATTACK;
 
-            List<MapObject> collisionList = map.GetCollisionList(moveX, moveY);
-            for (int i = 0; i < collisionList.Count; i++)
-            {
-                switch (collisionList[i].GetObjectType())
-                {
-                    case eMapObjectType.MONSTER:
-                        _character.Attack(collisionList[i]);
-                        break;
-                }
-            }
+            //TileMap map = GameManager.Instance.GetMap();
+
+            //List<MapObject> collisionList = map.GetCollisionList(moveX, moveY);
+            //for (int i = 0; i < collisionList.Count; i++)
+            //{
+            //    switch (collisionList[i].GetObjectType())
+            //    {
+            //        case eMapObjectType.MONSTER:
+            //            _character.Attack(collisionList[i]);
+            //            break;
+            //    }
+            //}
         }
-        _character.SetNextDirection(eMoveDirection.NONE);
-        _nextState = eStateType.IDLE;
-        //TileMap map = GameManager.Instance.GetMap();
-
-        //List<MapObject> collisionList = map.GetCollisionList(moveX, moveY);
-        //if (0 == collisionList.Count)  //이동 가능할때
-        //{
-        //    map.ResetObject(_tileX, _tileY, this);
-        //    _tileX = moveX;
-        //    _tileY = moveY;
-        //    map.SetObject(_tileX, _tileY, this, eTileLayer.MIDDLE);
-        //}
-        //else
-        //{
-        //    for (int i = 0; i < collisionList.Count; i++)
-        //    {
-        //        switch (collisionList[i].GetObjectType())
-        //        {
-        //            case eMapObjectType.MONSTER:
-        //                Attack(collisionList[i]);
-        //                break;
-        //        }
-        //    }
-        //}
+        else
+        {
+            _character.SetNextDirection(eMoveDirection.NONE);
+            _nextState = eStateType.IDLE;
+        }
     }
 }

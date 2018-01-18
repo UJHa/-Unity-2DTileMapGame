@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class IdleState : State
 {
-    override public eMoveDirection Update()
+    override public void Update()
     {
         if( eStateType.NONE != _nextState)
         {
             _character.ChangeState(_nextState);
-            return eMoveDirection.NONE;
         }
         eMoveDirection moveDirection = eMoveDirection.NONE;
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -34,7 +33,5 @@ public class IdleState : State
             _character.SetNextDirection(moveDirection);
             _nextState = eStateType.MOVE;
         }
-
-        return moveDirection;
     }
 }

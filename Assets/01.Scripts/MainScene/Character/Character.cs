@@ -27,8 +27,10 @@ public class Character : MapObject {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        //if (false == _isLive)
+        //    return;
+        _state.Update();
+    }
     public void Init(string viewName)
     {
         //View를 붙인다.
@@ -83,6 +85,21 @@ public class Character : MapObject {
             state.Init(this);
             _stateMap[eStateType.MOVE] = state;
         }
+        {
+            State state = new AttackState();
+            state.Init(this);
+            _stateMap[eStateType.ATTACK] = state;
+        }
+        {
+            State state = new DamageState();
+            state.Init(this);
+            _stateMap[eStateType.DAMAGE] = state;
+        }
+        {
+            State state = new DeathState();
+            state.Init(this);
+            _stateMap[eStateType.DEATH] = state;
+        }
         _state = _stateMap[eStateType.IDLE];
     }
     public void ChangeState(eStateType nextState)
@@ -100,8 +117,9 @@ public class Character : MapObject {
         switch (msgParam.message)
         {
             case "Attack":
-                //Debug.Log("Attacked : " + msgParam.attackPoint);
-                Damaged(msgParam.attackPoint);
+                Debug.Log("Deamasdf : " + _hp);
+                _damagePoint = msgParam.attackPoint;
+                _state.NextState(eStateType.DAMAGE);
                 break;
         }
     }
@@ -133,17 +151,6 @@ public class Character : MapObject {
         }
         return false;
     }
-    void Damaged(int attackEnemyPoint)
-    {
-        _hp -= attackEnemyPoint;
-        if (_hp <= 0)
-        {
-            _isLive = false;
-            _canMove = true;
-            Debug.Log("Death!");
-            _hp = 0;
-        }
-    }
     public void Attack(MapObject enemy)
     {
         MessageParam msgParam = new MessageParam();
@@ -153,5 +160,25 @@ public class Character : MapObject {
         msgParam.message = "Attack";
 
         MessageSystem.Instance.Send(msgParam);
+    }
+
+    public void DecreaseHP(int damagePoint)
+    {
+        _hp -= damagePoint;
+        if (_hp <= 0)
+        {
+            _isLive = false;
+            Debug.Log("Death!");
+            _hp = 0;
+        }
+    }
+    public bool IsLive()
+    {
+        return _isLive;
+    }
+    int _damagePoint;
+    public int GetDamagePoint()
+    {
+        return _damagePoint;
     }
 }
