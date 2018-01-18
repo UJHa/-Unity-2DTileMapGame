@@ -15,4 +15,14 @@ public class Monster : Character
     //    if (false == _isLive)
     //        return;
     //}
+    override protected void InitState()
+    {
+        base.InitState();
+        {
+            State state = new MonsterIdleState();
+            state.Init(this);
+            _stateMap[eStateType.IDLE] = state;
+        }
+        _state = _stateMap[eStateType.IDLE];
+    }
 }

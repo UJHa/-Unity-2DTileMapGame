@@ -10,7 +10,8 @@ public enum eMoveDirection
     UP,
     DOWN,
 }
-public class Character : MapObject {
+public class Character : MapObject
+{
 
 
     protected GameObject _characterView;
@@ -21,15 +22,18 @@ public class Character : MapObject {
     protected bool _isLive = true;
     protected int _attackPoint = 10;
     // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    void Start()
+    {
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
         //if (false == _isLive)
         //    return;
         _state.Update();
+        _deltaCoolTime += Time.deltaTime;
     }
     public void Init(string viewName)
     {
@@ -72,9 +76,8 @@ public class Character : MapObject {
     // State
     protected Dictionary<eStateType, State> _stateMap = new Dictionary<eStateType, State>();
     protected State _state;
-    void InitState()
+    virtual protected void InitState()
     {
-        //_stateMap[eStateType.IDLE] = new IdleState();
         {
             State state = new IdleState();
             state.Init(this);
@@ -104,7 +107,7 @@ public class Character : MapObject {
     }
     public void ChangeState(eStateType nextState)
     {
-        if(null != _state)
+        if (null != _state)
             _state.Stop();
 
         _state = _stateMap[nextState];
@@ -117,7 +120,7 @@ public class Character : MapObject {
         switch (msgParam.message)
         {
             case "Attack":
-                Debug.Log("Deamasdf : " + _hp);
+                Debug.Log("recevie Attack!");
                 _damagePoint = msgParam.attackPoint;
                 _state.NextState(eStateType.DAMAGE);
                 break;
@@ -161,10 +164,22 @@ public class Character : MapObject {
 
         MessageSystem.Instance.Send(msgParam);
     }
+    float _coolTime = 1.5f;
+    float _deltaCoolTime = 0.0f;
+    public bool IsAttackPossible()
+    {
+        if (_coolTime <= _deltaCoolTime)
+        {
+            _deltaCoolTime = 0.0f;
+            return true;
+        }
+        return false;
+    }
 
     public void DecreaseHP(int damagePoint)
     {
         _hp -= damagePoint;
+        Debug.Log("remain hp : " + _hp);
         if (_hp <= 0)
         {
             _isLive = false;

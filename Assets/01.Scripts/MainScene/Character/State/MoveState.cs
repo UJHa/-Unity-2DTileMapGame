@@ -16,7 +16,7 @@ public class MoveState : State
         int moveY = _character.GetTileY();
         switch (_character.GetNextDirection())
         {
-            case eMoveDirection.LEFT:  moveX--; break;
+            case eMoveDirection.LEFT: moveX--; break;
             case eMoveDirection.RIGHT: moveX++; break;
             case eMoveDirection.UP: moveY--; break;
             case eMoveDirection.DOWN: moveY++; break;
@@ -24,20 +24,15 @@ public class MoveState : State
 
         if (false == _character.MoveStart(moveX, moveY))
         {
-            _nextState = eStateType.ATTACK;
-
-            //TileMap map = GameManager.Instance.GetMap();
-
-            //List<MapObject> collisionList = map.GetCollisionList(moveX, moveY);
-            //for (int i = 0; i < collisionList.Count; i++)
-            //{
-            //    switch (collisionList[i].GetObjectType())
-            //    {
-            //        case eMapObjectType.MONSTER:
-            //            _character.Attack(collisionList[i]);
-            //            break;
-            //    }
-            //}
+            if (_character.IsAttackPossible())
+            {
+                _nextState = eStateType.ATTACK;
+            }
+            else
+            {
+                _character.SetNextDirection(eMoveDirection.NONE);
+                _nextState = eStateType.IDLE;
+            }
         }
         else
         {

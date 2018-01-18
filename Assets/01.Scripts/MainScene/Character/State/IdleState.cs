@@ -6,10 +6,7 @@ public class IdleState : State
 {
     override public void Update()
     {
-        if( eStateType.NONE != _nextState)
-        {
-            _character.ChangeState(_nextState);
-        }
+        base.Update();
         eMoveDirection moveDirection = eMoveDirection.NONE;
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
