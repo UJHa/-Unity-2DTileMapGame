@@ -38,6 +38,7 @@ public class Character : MapObject
             _deltaCoolTime += Time.deltaTime;
 
         _hpGuage.value = _hp / 100.0f;
+        _coolTimeGuage.value = _deltaCoolTime / _coolTime;
     }
     public void Init(string viewName)
     {
@@ -209,8 +210,8 @@ public class Character : MapObject
     {
         _characterView.GetComponent<SpriteRenderer>().color = Color.white;
     }
-    Slider _hpGuage;
     // UI
+    Slider _hpGuage;
     public void LinkHPGuage(Slider hpGuage)
     {
         GameObject canvasObject = transform.Find("Canvas").gameObject;
@@ -220,5 +221,16 @@ public class Character : MapObject
 
         _hpGuage = hpGuage;
         _hpGuage.value = _hp / 100.0f;
+    }
+    Slider _coolTimeGuage;
+    public void LinkCoolTimeGuage(Slider coolTimeGuage)
+    {
+        GameObject canvasObject = transform.Find("Canvas").gameObject;
+        coolTimeGuage.transform.SetParent(canvasObject.transform);
+        coolTimeGuage.transform.localPosition = new Vector3(0.0f, -0.4f, 0.0f);
+        coolTimeGuage.transform.localScale = Vector3.one;
+
+        _coolTimeGuage = coolTimeGuage;
+        _coolTimeGuage.value = _deltaCoolTime / _coolTime;
     }
 }
