@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum eMoveDirection
 {
@@ -12,8 +13,6 @@ public enum eMoveDirection
 }
 public class Character : MapObject
 {
-
-
     protected GameObject _characterView;
     protected int _tileX = 0;
     protected int _tileY = 0;
@@ -33,7 +32,12 @@ public class Character : MapObject
         //if (false == _isLive)
         //    return;
         _state.Update();
-        _deltaCoolTime += Time.deltaTime;
+        if (_coolTime <= _deltaCoolTime)
+            _deltaCoolTime = _coolTime;
+        else
+            _deltaCoolTime += Time.deltaTime;
+
+        _hpGuage.value = _hp / 100.0f;
     }
     public void Init(string viewName)
     {
@@ -48,8 +52,7 @@ public class Character : MapObject
         TileMap map = GameManager.Instance.GetMap();
         _tileX = Random.Range(1, map.GetWidth() - 2);
         _tileY = Random.Range(1, map.GetHeight() - 2);
-        //TileCell tileCell = map.GetTileCell(_tileX, _tileY);
-        //tileCell.AddObject(eTileLayer.MIDDLE, this);
+        
         map.SetObject(_tileX, _tileY, this, eTileLayer.MIDDLE);
 
         SetCanMove(false);
@@ -156,6 +159,7 @@ public class Character : MapObject
     }
     public void Attack(MapObject enemy)
     {
+        ResetCooltime();
         MessageParam msgParam = new MessageParam();
         msgParam.sender = this;
         msgParam.receiver = enemy;
@@ -170,14 +174,19 @@ public class Character : MapObject
     {
         if (_coolTime <= _deltaCoolTime)
         {
-            _deltaCoolTime = 0.0f;
             return true;
         }
         return false;
     }
+    void ResetCooltime()
+    {
+        _deltaCoolTime = 0.0f;
+    }
 
     public void DecreaseHP(int damagePoint)
     {
+        _characterView.GetComponent<SpriteRenderer>().color = Color.red;
+        Invoke("ResetColor", 0.1f);
         _hp -= damagePoint;
         Debug.Log("remain hp : " + _hp);
         if (_hp <= 0)
@@ -195,5 +204,21 @@ public class Character : MapObject
     public int GetDamagePoint()
     {
         return _damagePoint;
+    }
+    void ResetColor()
+    {
+        _characterView.GetComponent<SpriteRenderer>().color = Color.white;
+    }
+    Slider _hpGuage;
+    // UI
+    public void LinkHPGuage(Slider hpGuage)
+    {
+        GameObject canvasObject = transform.Find("Canvas").gameObject;
+        hpGuage.transform.SetParent(canvasObject.transform);
+        hpGuage.transform.localPosition = Vector3.zero;
+        hpGuage.transform.localScale = Vector3.one;
+
+        _hpGuage = hpGuage;
+        _hpGuage.value = _hp / 100.0f;
     }
 }

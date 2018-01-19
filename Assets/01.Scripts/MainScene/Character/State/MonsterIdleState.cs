@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class MonsterIdleState : State
 {
-    override public void Update()
-    {
-        base.Update();
-    }
+    //override public void Update()
+    //{
+    //    base.Update();
+    //}
 }
