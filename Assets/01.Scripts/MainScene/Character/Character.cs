@@ -14,8 +14,6 @@ public enum eMoveDirection
 public class Character : MapObject
 {
     protected GameObject _characterView;
-    protected int _tileX = 0;
-    protected int _tileY = 0;
 
     protected int _hp = 100;
     protected bool _isLive = true;
@@ -51,8 +49,8 @@ public class Character : MapObject
         _characterView.transform.localScale = Vector3.one;
 
         TileMap map = GameManager.Instance.GetMap();
-        _tileX = Random.Range(1, map.GetWidth() - 2);
-        _tileY = Random.Range(1, map.GetHeight() - 2);
+        _tileX = 0;//Random.Range(1, map.GetWidth() - 2);
+        _tileY = 3;//Random.Range(1, map.GetHeight() - 2);
         
         map.SetObject(_tileX, _tileY, this, eTileLayer.MIDDLE);
 
@@ -60,8 +58,6 @@ public class Character : MapObject
 
         InitState();
     }
-    public int GetTileX() { return _tileX; }
-    public int GetTileY() { return _tileY; }
 
     eMoveDirection _nextDirection = eMoveDirection.NONE;
     public eMoveDirection GetNextDirection() { return _nextDirection; }
@@ -210,6 +206,13 @@ public class Character : MapObject
     {
         _characterView.GetComponent<SpriteRenderer>().color = Color.white;
     }
+    private TileCell _targetTileCell;
+    public void SetTargetTileCell(int tileX, int tileY)
+    {
+        _targetTileCell = GameManager.Instance.GetMap().GetTileCell(tileX, tileY);
+    }
+
+    public TileCell GetTargetTileCell() { return _targetTileCell; }
     // UI
     Slider _hpGuage;
     public void LinkHPGuage(Slider hpGuage)

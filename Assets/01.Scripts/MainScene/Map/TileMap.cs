@@ -74,7 +74,7 @@ public class TileMap : MonoBehaviour
                 tileGameObject.transform.localPosition = Vector3.zero;
 
                 TileObject tileObject = tileGameObject.GetComponent<TileObject>();
-                tileObject.Init(_spriteArray[spriteIndex]);
+                tileObject.Init(_spriteArray[spriteIndex],x,y);
 
                 _tileCellList[y,x] = new TileCell();
                 GetTileCell(x, y).Init();
@@ -100,7 +100,7 @@ public class TileMap : MonoBehaviour
                     tileGameObject.transform.localPosition = Vector3.zero;
 
                     TileObject tileObject = tileGameObject.GetComponent<TileObject>();
-                    tileObject.Init(_spriteArray[spriteIndex]);
+                    tileObject.Init(_spriteArray[spriteIndex], x, y);
                     tileObject.SetCanMove(false);
                     GetTileCell(x, y).AddObject(eTileLayer.GROUND, tileObject);
                 }
