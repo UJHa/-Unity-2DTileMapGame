@@ -10,6 +10,7 @@ public enum eStateType
     ATTACK,
     DAMAGE,
     DEATH,
+    PATHFINDING,
 }
 public class State
 {

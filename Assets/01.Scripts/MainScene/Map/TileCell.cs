@@ -27,13 +27,23 @@ public class TileCell
         _position.x = x;
         _position.y = y;
     }
+    //tile position
+    private int _tileX;
+    private int _tileY;
+
+    public void SetTilePosition(int tileX, int tileY)
+    {
+        _tileX = tileX;
+        _tileY = tileY;
+    }
+    public int GetTileX() { return _tileX; }
+    public int GetTileY() { return _tileY; }
 
     public void AddObject(eTileLayer layer, MapObject mapObject)
     {
         List<MapObject> mapObjectList = _mapObjectMap[(int)layer];
 
         int sortingOrder = mapObjectList.Count;
-        //mapObject.SetSortingOrder(sortingID, sortingOrder);
         mapObject.SetSortingOrder(layer, sortingOrder);
         mapObject.SetPosition(_position);
 
@@ -72,5 +82,17 @@ public class TileCell
             }
         }
         return collisionList;
+    }
+    //visit
+    private bool _isVisit;
+    public void SetVisit(bool isVisited)
+    {
+        _isVisit = isVisited;
+    }
+    public bool IsVisited() { return _isVisit; }
+    public void Draw()
+    {
+        List<MapObject> objectList = _mapObjectMap[(int)eTileLayer.GROUND];
+        objectList[0].GetComponent<SpriteRenderer>().color = Color.blue;
     }
 }

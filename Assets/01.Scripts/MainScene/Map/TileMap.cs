@@ -78,7 +78,8 @@ public class TileMap : MonoBehaviour
 
                 _tileCellList[y,x] = new TileCell();
                 GetTileCell(x, y).Init();
-                GetTileCell(x, y).SetPosition(x * tileSize / 100.0f, -y * tileSize / 100.0f);
+                GetTileCell(x, y).SetPosition(x * tileSize / 100.0f, - y * tileSize / 100.0f);
+                GetTileCell(x, y).SetTilePosition(x, y);
                 GetTileCell(x, y).AddObject(eTileLayer.GROUND, tileObject);
             }
         }

@@ -7,7 +7,7 @@ public class PathFindingTestMove : State
     override public void Start()
     {
         base.Start();
-        Debug.Log("Move!");
+        Debug.Log("움직양!");
         _character.GetTargetTileCell();
         _nextState = eStateType.IDLE;
     }

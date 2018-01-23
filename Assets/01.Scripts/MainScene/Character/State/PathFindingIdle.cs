@@ -30,12 +30,10 @@ public class PathFindingIdle : State
                 if (!(_character.GetTileX() == targetTileX && _character.GetTileY() == targetTileY))
                 {
                     _character.SetTargetTileCell(targetTileX, targetTileY);
-                    hit.transform.GetComponent<SpriteRenderer>().color = Color.blue;
-                    _nextState = eStateType.MOVE;
+                    //hit.transform.GetComponent<SpriteRenderer>().color = Color.blue;
+                    _nextState = eStateType.PATHFINDING;
                 }
             }
-
-
             //RaycastHit hit;
             //Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
