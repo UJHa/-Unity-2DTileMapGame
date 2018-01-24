@@ -6,14 +6,11 @@ public class PathFindingIdle : State
 {
     override public void Start()
     {
-        base.Start();
+        base.Start(); 
     }
     override public void Update()
     {
         base.Update();
-        //Camera camera;
-        //GameObject cameraObject = _character.transform.Find("Main Camera").gameObject;
-        //camera = cameraObject.GetComponent<Camera>();
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -29,11 +26,16 @@ public class PathFindingIdle : State
 
                 if (!(_character.GetTileX() == targetTileX && _character.GetTileY() == targetTileY))
                 {
-                    _character.SetTargetTileCell(targetTileX, targetTileY);
+                    TileCell target = GameManager.Instance.GetMap().GetTileCell(targetTileX, targetTileY);
+                    _character.SetTargetTileCell(target);
                     //hit.transform.GetComponent<SpriteRenderer>().color = Color.blue;
                     _nextState = eStateType.PATHFINDING;
                 }
             }
+            //if (null == _character.GetTargetTileCell()) 
+            //{
+            //    _nextState = eStateType.IDLE;
+            //}
             //RaycastHit hit;
             //Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 

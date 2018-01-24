@@ -4,87 +4,149 @@ using UnityEngine;
 
 public class PathFindingState : State
 {
-    struct sPathCommand
+    enum eFindState
     {
-        public TileCell tileCell;
-        public TileCell prevTileCell;
+        PATHFINDING,
+        BUILD_PATH,
     }
-    Queue<sPathCommand> _pathfindingQueue = new Queue<sPathCommand>();
-	// Use this for initialization
-	override public void Start () {
+    struct sPosition
+    {
+        public int x;
+        public int y;
+    }
+    Queue<TileCell> _pathfindingQueue = new Queue<TileCell>();
+    Stack<TileCell> _pathfindingStack = new Stack<TileCell>();
+    eFindState _findState;
+    TileCell _goalTileCell;
+    // Use this for initialization
+    override public void Start () {
         base.Start();
+        _findState = eFindState.PATHFINDING;
         TileMap map = GameManager.Instance.GetMap();
-        map.GetTileCell(_character.GetTileX(), _character.GetTileY());
-        for (int y = 0; y < map.GetHeight(); y++)
+        _goalTileCell = _character.GetTargetTileCell();
+        if (null != _goalTileCell)
         {
-            for (int x = 0; x < map.GetWidth(); x++)
-            {
-                map.GetTileCell(x, y).SetVisit(false);
-            }
+            map.ResetVisit();
         }
-        sPathCommand command;
-        command.tileCell = map.GetTileCell(_character.GetTileX(), _character.GetTileY());
-        command.prevTileCell = null;
-        _pathfindingQueue.Enqueue(command);
-    }
+        else
+        {
+            _nextState = eStateType.IDLE;
+        }
 
+        //첫 큐에 넣는 출발 셀 넣기
+        TileCell startTileCell = map.GetTileCell(_character.GetTileX(), _character.GetTileY());
+        startTileCell.SetPrevTileCell(null);
+        _pathfindingQueue.Enqueue(startTileCell);
+    }
     // Update is called once per frame
     override public void Update () {
         base.Update();
-		if(0 != _pathfindingQueue.Count)
+
+        switch (_findState)
+        {
+            case eFindState.PATHFINDING:
+                UpdatePathFinding();
+                break;
+            case eFindState.BUILD_PATH:
+                UpdateBuildPath();
+                break;
+        }
+    }
+    public override void Stop()
+    {
+        base.Stop();
+        _pathfindingQueue.Clear();
+        _findState = eFindState.PATHFINDING;
+        _character.SetTargetTileCell(null);
+    }
+    private sPosition GetPositionByDirection(sPosition curPosition, int direction)
+    {
+        sPosition position = curPosition;
+        eMoveDirection moveDirection = (eMoveDirection)direction;
+        switch (moveDirection)
+        {
+            case eMoveDirection.LEFT:
+                position.x--;
+                if(position.x < 0)
+                    position.x++;
+                break;
+            case eMoveDirection.RIGHT:
+                position.x++;
+                if (position.x == GameManager.Instance.GetMap().GetWidth())
+                    position.x--;
+                break;
+            case eMoveDirection.UP:
+                position.y--;
+                if (position.y < 0)
+                    position.y++;
+                break;
+            case eMoveDirection.DOWN:
+                position.y++;
+                if (position.y == GameManager.Instance.GetMap().GetHeight())
+                    position.y--;
+                break;
+        }
+        return position;
+    }
+    private void UpdatePathFinding()
+    {
+        if (0 != _pathfindingQueue.Count)
         {
             //큐의 첫번째 커맨드 가져옴
-            sPathCommand command = _pathfindingQueue.Dequeue();
+            TileCell tileCell = _pathfindingQueue.Dequeue();
             //가져온 커맨드의 현재 타일셀 방문 표시
-            command.tileCell.SetVisit(true);
-            //가져온 커맨드의 현재 타일셀이 목표 타일일 경우 nextState 변경
-            if(_character.GetTargetTileCell()==command.tileCell)
+            if (false == tileCell.IsVisited())
             {
-                Debug.Log("찾았어양");
-                _nextState = eStateType.MOVE;
-                return;
-            }
+                tileCell.SetVisit(true);
+                tileCell.Draw(Color.blue);
 
-            int tileX = command.tileCell.GetTileX();
-            int tileY = command.tileCell.GetTileY();
-            //4방향 next타일들 검사
-            for (int i = 0; i < 4; i++)
-            {
-                switch (i)
+                //가져온 커맨드의 현재 타일셀이 목표 타일일 경우 nextState 변경
+                if (_character.GetTargetTileCell() == tileCell)
                 {
-                    case 0: //left
-                        tileX--;
-                        break;
-                    case 1: //right
-                        tileX++;
-                        break;
-                    case 2: //up
-                        tileY--;
-                        break;
-                    case 3: //down
-                        tileY++;
-                        break;
+                    Debug.Log("찾았어양");
+                    _findState = eFindState.BUILD_PATH;
+                    return;
                 }
-                TileMap map = GameManager.Instance.GetMap();
-                if (tileX < 0) tileX = 0;
-                if (tileY < 0) tileY = 0;
-                if (tileX >= map.GetWidth()) tileX = map.GetWidth() - 1;
-                if (tileY >= map.GetHeight()) tileY = map.GetHeight() - 1;
-
-                TileCell nextTileCell = map.GetTileCell(tileX, tileY);
-                tileX = command.tileCell.GetTileX();
-                tileY = command.tileCell.GetTileY();
-
-                // nextTileCell 방문 안했고, 움직일수 있는 타일일때
-                if (false == nextTileCell.IsVisited() && true == nextTileCell.CanMove())
+                int tileX = tileCell.GetTileX();
+                int tileY = tileCell.GetTileY();
+                //4방향 next타일들 검사
+                for (int direction = (int)eMoveDirection.LEFT; direction < (int)eMoveDirection.DOWN + 1; direction++)
                 {
-                    sPathCommand nextCommand;
-                    nextCommand.tileCell = nextTileCell;
-                    nextTileCell.Draw();
-                    nextCommand.prevTileCell = command.tileCell;
-                    _pathfindingQueue.Enqueue(nextCommand);
+                    sPosition curPosition;
+                    curPosition.x = tileCell.GetTileX();
+                    curPosition.y = tileCell.GetTileY();
+                    sPosition nextPosition = GetPositionByDirection(curPosition, direction);
+
+                    TileMap map = GameManager.Instance.GetMap();
+                    TileCell nextTileCell = map.GetTileCell(nextPosition.x, nextPosition.y);
+                    tileX = tileCell.GetTileX();
+                    tileY = tileCell.GetTileY();
+
+                    // nextTileCell 방문 안했고, 움직일수 있는 타일일때
+                    if (false == nextTileCell.IsVisited() && true == nextTileCell.CanMove())
+                    {
+                        float distance = tileCell.GetDistanceFromStart() + nextTileCell.GetDistanceFromStart();
+                        nextTileCell.SetDistanceFromStart(distance);
+
+                        nextTileCell.SetPrevTileCell(tileCell);
+                        _pathfindingQueue.Enqueue(nextTileCell);
+                    }
                 }
             }
         }
-	}
+    }
+    private void UpdateBuildPath()
+    {
+        if (null != _goalTileCell.GetPrevTileCell())
+        {
+            _pathfindingStack.Push(_goalTileCell);
+            _goalTileCell.Draw(Color.red);
+            _goalTileCell = _goalTileCell.GetPrevTileCell();
+        }
+        else
+        {
+            _character.SetPathFindingStack(_pathfindingStack);
+            _nextState = eStateType.MOVE;
+        }
+    }
 }

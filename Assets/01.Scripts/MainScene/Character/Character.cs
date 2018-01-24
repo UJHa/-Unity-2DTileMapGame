@@ -206,13 +206,20 @@ public class Character : MapObject
     {
         _characterView.GetComponent<SpriteRenderer>().color = Color.white;
     }
+    //pathfinding
     private TileCell _targetTileCell;
-    public void SetTargetTileCell(int tileX, int tileY)
+    public void SetTargetTileCell(TileCell tileCell)
     {
-        _targetTileCell = GameManager.Instance.GetMap().GetTileCell(tileX, tileY);
+        _targetTileCell = tileCell;
     }
-
     public TileCell GetTargetTileCell() { return _targetTileCell; }
+
+    private Stack<TileCell> _pathfindingStack;
+    public void SetPathFindingStack(Stack<TileCell> pathfindingStack)
+    {
+        _pathfindingStack = pathfindingStack;
+    }
+    public Stack<TileCell> GetPathFindingStack() { return _pathfindingStack; }
     // UI
     Slider _hpGuage;
     public void LinkHPGuage(Slider hpGuage)

@@ -84,15 +84,37 @@ public class TileCell
         return collisionList;
     }
     //visit
+    public void ResetPathFinding()
+    {
+        SetVisit(false);
+    }
     private bool _isVisit;
     public void SetVisit(bool isVisited)
     {
         _isVisit = isVisited;
     }
     public bool IsVisited() { return _isVisit; }
-    public void Draw()
+    public void Draw(Color color)
     {
         List<MapObject> objectList = _mapObjectMap[(int)eTileLayer.GROUND];
-        objectList[0].GetComponent<SpriteRenderer>().color = Color.blue;
+        objectList[0].GetComponent<SpriteRenderer>().color = color;
+    }
+    private float _distance = 0.0f;
+    public float GetDistanceFromStart()
+    {
+        return _distance;
+    }
+    public void SetDistanceFromStart(float distance)
+    {
+        _distance = distance;
+    }
+    private TileCell _prevTileCell = null;
+    public void SetPrevTileCell(TileCell prevTileCell)
+    {
+        _prevTileCell = prevTileCell;
+    }
+    public TileCell GetPrevTileCell()
+    {
+        return _prevTileCell;
     }
 }

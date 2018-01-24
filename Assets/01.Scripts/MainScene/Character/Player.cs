@@ -27,5 +27,6 @@ public class Player : Character
             _stateMap[eStateType.MOVE] = state;
         }
         _state = _stateMap[eStateType.IDLE];
+        _state.Start();
     }
 }
