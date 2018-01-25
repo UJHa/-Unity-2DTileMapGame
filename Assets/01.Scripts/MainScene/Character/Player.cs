@@ -22,6 +22,11 @@ public class Player : Character
             _stateMap[eStateType.PATHFINDING] = state;
         }
         {
+            State state = new BuildPathState();
+            state.Init(this);
+            _stateMap[eStateType.BUILD_PATH] = state;
+        }
+        {
             State state = new PathFindingTestMove();
             state.Init(this);
             _stateMap[eStateType.MOVE] = state;

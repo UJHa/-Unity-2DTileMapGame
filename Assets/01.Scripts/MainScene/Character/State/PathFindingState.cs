@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class PathFindingState : State
 {
-    enum eFindState
-    {
-        PATHFINDING,
-        BUILD_PATH,
-    }
+    //enum eFindState
+    //{
+    //    PATHFINDING,
+    //    BUILD_PATH,
+    //}
     struct sPosition
     {
         public int x;
         public int y;
     }
     Queue<TileCell> _pathfindingQueue = new Queue<TileCell>();
-    eFindState _findState;
-    TileCell _reverseTileCell;
+    //eFindState _findState;
+    //TileCell _reverseTileCell;
     override public void Start () {
         base.Start();
-        _findState = eFindState.PATHFINDING;
-        _reverseTileCell = null;
+        //_findState = eFindState.PATHFINDING;
+        //_reverseTileCell = null;
         TileMap map = GameManager.Instance.GetMap();
         if (null != _character.GetTargetTileCell())
         {
@@ -40,23 +40,23 @@ public class PathFindingState : State
     // Update is called once per frame
     override public void Update () {
         base.Update();
-
-        switch (_findState)
-        {
-            case eFindState.PATHFINDING:
-                UpdatePathFinding();
-                break;
-            case eFindState.BUILD_PATH:
-                UpdateBuildPath();
-                break;
-        }
+        UpdatePathFinding();
+        //switch (_findState)
+        //{
+        //    case eFindState.PATHFINDING:
+        //        UpdatePathFinding();
+        //        break;
+        //    case eFindState.BUILD_PATH:
+        //        UpdateBuildPath();
+        //        break;
+        //}
     }
     public override void Stop()
     {
         base.Stop();
         _pathfindingQueue.Clear();
-        _findState = eFindState.PATHFINDING;
-        _character.SetTargetTileCell(null);
+        //_findState = eFindState.PATHFINDING;
+        //_character.SetTargetTileCell(null);
     }
     private sPosition GetPositionByDirection(sPosition curPosition, int direction)
     {
@@ -103,8 +103,9 @@ public class PathFindingState : State
                 if (_character.GetTargetTileCell() == tileCell)
                 {
                     Debug.Log("찾았어양");
-                    _reverseTileCell = tileCell;
-                    _findState = eFindState.BUILD_PATH;
+                    _character.SetTargetTileCell(tileCell);
+                    //_findState = eFindState.BUILD_PATH;
+                    _nextState = eStateType.BUILD_PATH;
                     return;
                 }
                 int tileX = tileCell.GetTileX();
@@ -135,17 +136,17 @@ public class PathFindingState : State
             }
         }
     }
-    private void UpdateBuildPath()
-    {
-        if (null != _reverseTileCell.GetPrevTileCell())
-        {
-            _character.PushPathTileCell(_reverseTileCell);
-            _reverseTileCell.Draw(Color.white);
-            _reverseTileCell = _reverseTileCell.GetPrevTileCell();
-        }
-        else
-        {
-            _nextState = eStateType.MOVE;
-        }
-    }
+    //private void UpdateBuildPath()
+    //{
+    //    if (null != _reverseTileCell.GetPrevTileCell())
+    //    {
+    //        _character.PushPathTileCell(_reverseTileCell);
+    //        _reverseTileCell.Draw(Color.white);
+    //        _reverseTileCell = _reverseTileCell.GetPrevTileCell();
+    //    }
+    //    else
+    //    {
+    //        _nextState = eStateType.MOVE;
+    //    }
+    //}
 }
