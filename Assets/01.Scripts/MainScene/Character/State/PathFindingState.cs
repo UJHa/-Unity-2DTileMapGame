@@ -15,7 +15,7 @@ public class PathFindingState : State
         public TileCell tileCell;
         public float heuristic;
     }
-    override public void Start () {
+    override public void Start() {
         base.Start();
         TileMap map = GameManager.Instance.GetMap();
         if (null != _character.GetTargetTileCell())
@@ -33,29 +33,20 @@ public class PathFindingState : State
         sPathCommand startCmd;
         startCmd.tileCell = startTileCell;
         startCmd.heuristic = 0.0f;
+        //PushPathfindingQueue(startCmd);
         _pathfindingQueue.Add(startCmd);
 
     }
     // Update is called once per frame
-    override public void Update () {
+    override public void Update() {
         base.Update();
         UpdatePathFinding();
-        //switch (_findState)
-        //{
-        //    case eFindState.PATHFINDING:
-        //        UpdatePathFinding();
-        //        break;
-        //    case eFindState.BUILD_PATH:
-        //        UpdateBuildPath();
-        //        break;
-        //}
     }
+
     public override void Stop()
     {
         base.Stop();
         _pathfindingQueue.Clear();
-        //_findState = eFindState.PATHFINDING;
-        //_character.SetTargetTileCell(null);
     }
     private sPosition GetPositionByDirection(sPosition curPosition, int direction)
     {
@@ -65,7 +56,7 @@ public class PathFindingState : State
         {
             case eMoveDirection.LEFT:
                 position.x--;
-                if(position.x < 0)
+                if (position.x < 0)
                     position.x++;
                 break;
             case eMoveDirection.RIGHT:
@@ -127,27 +118,30 @@ public class PathFindingState : State
                     if (false == nextTileCell.IsVisited() && true == nextTileCell.CanMove())
                     {
                         float distanceFromStart = command.tileCell.GetDistanceFromStart() + nextTileCell.GetDistanceFromWeight();
-                        if(null == nextTileCell.GetPrevTileCell())
+                        //float heuristic = distanceFromStart;
+                        float heuristic = CalcAStarHeuristic(distanceFromStart, nextTileCell, _character.GetTargetTileCell());
+
+                        if (null == nextTileCell.GetPrevTileCell())
                         {
                             nextTileCell.SetDistanceFromStart(distanceFromStart);
                             nextTileCell.SetPrevTileCell(command.tileCell);
 
                             sPathCommand nextCommand;
                             nextCommand.tileCell = nextTileCell;
-                            nextCommand.heuristic = distanceFromStart;
-                            _pathfindingQueue.Add(nextCommand);
+                            nextCommand.heuristic = heuristic;
+                            PushPathfindingQueue(nextCommand);
                         }
                         else
                         {
-                            if(distanceFromStart < nextTileCell.GetDistanceFromStart())
+                            if (distanceFromStart < nextTileCell.GetDistanceFromStart())
                             {
                                 nextTileCell.SetDistanceFromStart(distanceFromStart);
                                 nextTileCell.SetPrevTileCell(command.tileCell);
 
                                 sPathCommand nextCommand;
                                 nextCommand.tileCell = nextTileCell;
-                                nextCommand.heuristic = distanceFromStart;
-                                _pathfindingQueue.Add(nextCommand);
+                                nextCommand.heuristic = heuristic;
+                                PushPathfindingQueue(nextCommand);
                             }
                         }
                     }
@@ -155,17 +149,28 @@ public class PathFindingState : State
             }
         }
     }
-    //private void UpdateBuildPath()
-    //{
-    //    if (null != _reverseTileCell.GetPrevTileCell())
-    //    {
-    //        _character.PushPathTileCell(_reverseTileCell);
-    //        _reverseTileCell.Draw(Color.white);
-    //        _reverseTileCell = _reverseTileCell.GetPrevTileCell();
-    //    }
-    //    else
-    //    {
-    //        _nextState = eStateType.MOVE;
-    //    }
-    //}
+    private void PushPathfindingQueue(sPathCommand command)
+    {
+        _pathfindingQueue.Add(command);
+        _pathfindingQueue.Sort(delegate (sPathCommand cmd, sPathCommand nextCmd)
+        {
+            if (cmd.heuristic < nextCmd.heuristic) return -1;
+            else if (cmd.heuristic > nextCmd.heuristic) return 1;
+            return 0;
+        }
+        );
+    }
+    private float CalcComplexHeuristic(TileCell nextTileCell, TileCell targetTileCell)
+    {
+        int distanceW = nextTileCell.GetTileX() - targetTileCell.GetTileX();
+        int distanceH = nextTileCell.GetTileY() - targetTileCell.GetTileY();
+        distanceW *= distanceW;
+        distanceH *= distanceH;
+        float distance = distanceW + distanceH;
+        return distance;
+    }
+    private float CalcAStarHeuristic(float distanceFromStart, TileCell nextTileCell, TileCell targetTileCell)
+    {
+        return distanceFromStart + CalcComplexHeuristic(nextTileCell, targetTileCell);
+    }
 }

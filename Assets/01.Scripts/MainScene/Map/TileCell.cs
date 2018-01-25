@@ -101,7 +101,7 @@ public class TileCell
         objectList[0].GetComponent<SpriteRenderer>().color = color;
     }
     private float _distanceStart = 0.0f;
-    private float _distanceWeight = 0.0f;
+    private float _distanceWeight = 1.0f;
     public float GetDistanceFromStart()
     {
         return _distanceStart;
