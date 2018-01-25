@@ -100,14 +100,19 @@ public class TileCell
         List<MapObject> objectList = _mapObjectMap[(int)eTileLayer.GROUND];
         objectList[0].GetComponent<SpriteRenderer>().color = color;
     }
-    private float _distance = 0.0f;
+    private float _distanceStart = 0.0f;
+    private float _distanceWeight = 0.0f;
     public float GetDistanceFromStart()
     {
-        return _distance;
+        return _distanceStart;
+    }
+    public float GetDistanceFromWeight()
+    {
+        return _distanceWeight;
     }
     public void SetDistanceFromStart(float distance)
     {
-        _distance = distance;
+        _distanceStart = distance;
     }
     private TileCell _prevTileCell;
     public void SetPrevTileCell(TileCell prevTileCell)
