@@ -15,16 +15,14 @@ public class PathFindingState : State
         public int y;
     }
     Queue<TileCell> _pathfindingQueue = new Queue<TileCell>();
-    Stack<TileCell> _pathfindingStack = new Stack<TileCell>();
     eFindState _findState;
-    TileCell _goalTileCell;
-    // Use this for initialization
+    TileCell _reverseTileCell;
     override public void Start () {
         base.Start();
         _findState = eFindState.PATHFINDING;
+        _reverseTileCell = null;
         TileMap map = GameManager.Instance.GetMap();
-        _goalTileCell = _character.GetTargetTileCell();
-        if (null != _goalTileCell)
+        if (null != _character.GetTargetTileCell())
         {
             map.ResetVisit();
         }
@@ -37,6 +35,7 @@ public class PathFindingState : State
         TileCell startTileCell = map.GetTileCell(_character.GetTileX(), _character.GetTileY());
         startTileCell.SetPrevTileCell(null);
         _pathfindingQueue.Enqueue(startTileCell);
+
     }
     // Update is called once per frame
     override public void Update () {
@@ -104,6 +103,7 @@ public class PathFindingState : State
                 if (_character.GetTargetTileCell() == tileCell)
                 {
                     Debug.Log("찾았어양");
+                    _reverseTileCell = tileCell;
                     _findState = eFindState.BUILD_PATH;
                     return;
                 }
@@ -137,15 +137,14 @@ public class PathFindingState : State
     }
     private void UpdateBuildPath()
     {
-        if (null != _goalTileCell.GetPrevTileCell())
+        if (null != _reverseTileCell.GetPrevTileCell())
         {
-            _pathfindingStack.Push(_goalTileCell);
-            _goalTileCell.Draw(Color.red);
-            _goalTileCell = _goalTileCell.GetPrevTileCell();
+            _character.PushPathTileCell(_reverseTileCell);
+            _reverseTileCell.Draw(Color.white);
+            _reverseTileCell = _reverseTileCell.GetPrevTileCell();
         }
         else
         {
-            _character.SetPathFindingStack(_pathfindingStack);
             _nextState = eStateType.MOVE;
         }
     }

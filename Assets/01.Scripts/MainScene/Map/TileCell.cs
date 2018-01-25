@@ -87,6 +87,7 @@ public class TileCell
     public void ResetPathFinding()
     {
         SetVisit(false);
+        _prevTileCell = null;
     }
     private bool _isVisit;
     public void SetVisit(bool isVisited)
@@ -108,7 +109,7 @@ public class TileCell
     {
         _distance = distance;
     }
-    private TileCell _prevTileCell = null;
+    private TileCell _prevTileCell;
     public void SetPrevTileCell(TileCell prevTileCell)
     {
         _prevTileCell = prevTileCell;

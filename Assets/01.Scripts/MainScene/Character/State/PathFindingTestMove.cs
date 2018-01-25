@@ -4,24 +4,29 @@ using UnityEngine;
 
 public class PathFindingTestMove : State
 {
-    Stack<TileCell> _pathfindingStack;
     override public void Start()
     {
         base.Start();
         Debug.Log("움직양!");
-        _pathfindingStack = _character.GetPathFindingStack();
+    }
+    override public void Stop()
+    {
+        base.Stop();
+        _character.ClearPathfindingTileCell();
+        Debug.Log("멈춰양!");
     }
     override public void Update()
     {
         base.Update();
-        if(_pathfindingStack.Count > 0)
+        if(false == _character.IsEmptyPathfindingTileCell())
         {
-            TileCell moveTileCell = _pathfindingStack.Pop();
+            TileCell moveTileCell = _character.PopPathTileCell();
             _character.SetNextDirection(GetMoveDirection(moveTileCell));
-            if (_character.MoveStart(moveTileCell.GetTileX(), moveTileCell.GetTileY()))
-            {
-                _character.SetNextDirection(eMoveDirection.NONE);
-            }
+            _character.MoveStart(moveTileCell.GetTileX(), moveTileCell.GetTileY());
+            //if ()
+            //{
+            //    _character.SetNextDirection(eMoveDirection.NONE);
+            //}
         }
         else
         {

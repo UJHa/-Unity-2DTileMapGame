@@ -214,10 +214,27 @@ public class Character : MapObject
     }
     public TileCell GetTargetTileCell() { return _targetTileCell; }
 
-    private Stack<TileCell> _pathfindingStack;
-    public void SetPathFindingStack(Stack<TileCell> pathfindingStack)
+    private Stack<TileCell> _pathfindingStack = new Stack<TileCell>();
+    public void PushPathTileCell(TileCell tileCell)
     {
-        _pathfindingStack = pathfindingStack;
+        if (null != tileCell) 
+            _pathfindingStack.Push(tileCell);
+    }
+    public TileCell PopPathTileCell()
+    {
+        if(_pathfindingStack.Count>0)
+            return _pathfindingStack.Pop();
+        return null;
+    }
+    public bool IsEmptyPathfindingTileCell()
+    {
+        if (_pathfindingStack.Count > 0)
+            return false;
+        return true;
+    }
+    public void ClearPathfindingTileCell()
+    {
+        _pathfindingStack.Clear();
     }
     public Stack<TileCell> GetPathFindingStack() { return _pathfindingStack; }
     // UI
