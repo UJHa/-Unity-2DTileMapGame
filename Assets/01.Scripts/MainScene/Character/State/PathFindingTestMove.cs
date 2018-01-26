@@ -20,9 +20,19 @@ public class PathFindingTestMove : State
         base.Update();
         if(false == _character.IsEmptyPathfindingTileCell())
         {
-            TileCell moveTileCell = _character.PopPathTileCell();
-            _character.SetNextDirection(GetMoveDirection(moveTileCell));
-            _character.MoveStart(moveTileCell.GetTileX(), moveTileCell.GetTileY());
+            TileCell nextTileCell = _character.PopPathTileCell();
+
+            sPosition curPosition;
+            curPosition.x = _character.GetTileX();
+            curPosition.y = _character.GetTileY();
+
+            sPosition toPosition;
+            toPosition.x = nextTileCell.GetTileX();
+            toPosition.y = nextTileCell.GetTileY();
+
+            eMoveDirection direction = GetDirection(curPosition, toPosition);
+            _character.SetNextDirection(direction);
+            _character.MoveStart(nextTileCell.GetTileX(), nextTileCell.GetTileY());
             //if ()
             //{
             //    _character.SetNextDirection(eMoveDirection.NONE);
@@ -33,30 +43,38 @@ public class PathFindingTestMove : State
             _nextState = eStateType.IDLE;
         }
     }
-    private eMoveDirection GetMoveDirection(TileCell nextTileCell)
+    private eMoveDirection GetDirection(sPosition curPosition, sPosition toPosition)
     {
-        if (_character.GetTileX() == nextTileCell.GetTileX())
-        {
-            if (_character.GetTileY() < nextTileCell.GetTileY())
-            {
-                return eMoveDirection.DOWN;
-            }
-            else if (_character.GetTileY() > nextTileCell.GetTileY())
-            {
-                return eMoveDirection.UP;
-            }
-        }
-        if (_character.GetTileY() == nextTileCell.GetTileY())
-        {
-            if (_character.GetTileX() < nextTileCell.GetTileX())
-            {
-                return eMoveDirection.RIGHT;
-            }
-            else if (_character.GetTileX() > nextTileCell.GetTileX())
-            {
-                return eMoveDirection.LEFT;
-            }
-        }
-        return eMoveDirection.NONE;
+        if (toPosition.x < curPosition.x) return eMoveDirection.LEFT;
+        if (toPosition.x > curPosition.x) return eMoveDirection.RIGHT;
+        if (toPosition.y < curPosition.y) return eMoveDirection.UP;
+        if (toPosition.y > curPosition.y) return eMoveDirection.DOWN;
+        return eMoveDirection.DOWN;
     }
+    //private eMoveDirection GetMoveDirection(TileCell nextTileCell)
+    //{
+    //    if (_character.GetTileX() == nextTileCell.GetTileX())
+    //    {
+    //        if (_character.GetTileY() < nextTileCell.GetTileY())
+    //        {
+    //            return eMoveDirection.DOWN;
+    //        }
+    //        else if (_character.GetTileY() > nextTileCell.GetTileY())
+    //        {
+    //            return eMoveDirection.UP;
+    //        }
+    //    }
+    //    if (_character.GetTileY() == nextTileCell.GetTileY())
+    //    {
+    //        if (_character.GetTileX() < nextTileCell.GetTileX())
+    //        {
+    //            return eMoveDirection.RIGHT;
+    //        }
+    //        else if (_character.GetTileX() > nextTileCell.GetTileX())
+    //        {
+    //            return eMoveDirection.LEFT;
+    //        }
+    //    }
+    //    return eMoveDirection.NONE;
+    //}
 }

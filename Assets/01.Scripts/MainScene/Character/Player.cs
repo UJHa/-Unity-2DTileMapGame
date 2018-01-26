@@ -17,7 +17,7 @@ public class Player : Character
             _stateMap[eStateType.IDLE] = state;
         }
         {
-            State state = new PathFindingState();
+            State state = new PathFindingImmidiateState();
             state.Init(this);
             _stateMap[eStateType.PATHFINDING] = state;
         }
