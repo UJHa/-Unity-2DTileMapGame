@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildPathState : State
+public class PathfindingBuildState : State
 {
     TileCell _reverseTileCell;
     override public void Start()
     {
         base.Start();
         _reverseTileCell = _character.GetTargetTileCell();
-
     }
     override public void Update()
     {

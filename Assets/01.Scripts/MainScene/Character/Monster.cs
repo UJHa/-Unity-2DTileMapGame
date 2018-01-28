@@ -4,17 +4,12 @@ using UnityEngine;
 
 public class Monster : Character
 {
-    // Use this for initialization
     void Start()
     {
         _type = eMapObjectType.MONSTER;
+        _coolTime = 2.0f;
     }
 
-    //void Update()
-    //{
-    //    if (false == _isLive)
-    //        return;
-    //}
     override protected void InitState()
     {
         base.InitState();
@@ -22,6 +17,11 @@ public class Monster : Character
             State state = new MonsterIdleState();
             state.Init(this);
             _stateMap[eStateType.IDLE] = state;
+        }
+        {
+            State state = new BattleState();
+            state.Init(this);
+            _stateMap[eStateType.BATTLE] = state;
         }
         _state = _stateMap[eStateType.IDLE];
     }

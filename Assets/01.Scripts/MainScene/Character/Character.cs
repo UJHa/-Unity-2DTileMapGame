@@ -122,6 +122,16 @@ public class Character : MapObject
             case "Attack":
                 Debug.Log("recevie Attack!");
                 _damagePoint = msgParam.attackPoint;
+
+                sPosition curPosition;
+                curPosition.x = _tileX;
+                curPosition.y = _tileY;
+                sPosition attackedPosition;
+                attackedPosition.x = msgParam.sender.GetTileX();
+                attackedPosition.y = msgParam.sender.GetTileY();
+                eMoveDirection direction = GetDirection(curPosition, attackedPosition);
+                SetNextDirection(direction);
+                MoveStart(attackedPosition.x, attackedPosition.y);
                 _state.NextState(eStateType.DAMAGE);
                 break;
         }
@@ -165,7 +175,7 @@ public class Character : MapObject
 
         MessageSystem.Instance.Send(msgParam);
     }
-    float _coolTime = 1.5f;
+    protected float _coolTime = 1.5f;
     float _deltaCoolTime = 0.0f;
     public bool IsAttackPossible()
     {
@@ -237,6 +247,7 @@ public class Character : MapObject
         _pathfindingStack.Clear();
     }
     public Stack<TileCell> GetPathFindingStack() { return _pathfindingStack; }
+    
     // UI
     Slider _hpGuage;
     public void LinkHPGuage(Slider hpGuage)
@@ -259,5 +270,15 @@ public class Character : MapObject
 
         _coolTimeGuage = coolTimeGuage;
         _coolTimeGuage.value = _deltaCoolTime / _coolTime;
+    }
+
+    //position
+    public eMoveDirection GetDirection(sPosition curPosition, sPosition toPosition)
+    {
+        if (toPosition.x < curPosition.x) return eMoveDirection.LEFT;
+        if (toPosition.x > curPosition.x) return eMoveDirection.RIGHT;
+        if (toPosition.y < curPosition.y) return eMoveDirection.UP;
+        if (toPosition.y > curPosition.y) return eMoveDirection.DOWN;
+        return eMoveDirection.DOWN;
     }
 }

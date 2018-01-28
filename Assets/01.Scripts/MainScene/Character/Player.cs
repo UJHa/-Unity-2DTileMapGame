@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Player : Character
 {
-    // Use this for initialization
     void Start()
     {
-	}
+        _coolTime = 1.0f;
+    }
     override protected void InitState()
     {
         base.InitState();
@@ -22,7 +22,7 @@ public class Player : Character
             _stateMap[eStateType.PATHFINDING] = state;
         }
         {
-            State state = new BuildPathState();
+            State state = new PathfindingBuildState();
             state.Init(this);
             _stateMap[eStateType.BUILD_PATH] = state;
         }
@@ -30,6 +30,11 @@ public class Player : Character
             State state = new PathFindingTestMove();
             state.Init(this);
             _stateMap[eStateType.MOVE] = state;
+        }
+        {
+            State state = new BattleState();
+            state.Init(this);
+            _stateMap[eStateType.BATTLE] = state;
         }
         _state = _stateMap[eStateType.IDLE];
         _state.Start();

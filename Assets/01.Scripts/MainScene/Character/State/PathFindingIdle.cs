@@ -23,7 +23,7 @@ public class PathFindingIdle : State
                 int targetTileY = hit.transform.GetComponent<MapObject>().GetTileY();
 
                 TileCell target = GameManager.Instance.GetMap().GetTileCell(targetTileX, targetTileY);
-                if (!(_character.GetTileX() == targetTileX && _character.GetTileY() == targetTileY))
+                if (!(_character.GetTileX() == targetTileX && _character.GetTileY() == targetTileY))    //player위치 제외한 타일셀 클릭 시
                 {
                     if (target.CanMove())
                     {
@@ -31,6 +31,20 @@ public class PathFindingIdle : State
                         _character.SetTargetTileCell(target);
                         //hit.transform.GetComponent<SpriteRenderer>().color = Color.blue;
                         _nextState = eStateType.PATHFINDING;
+                    }
+                    else
+                    {
+                        List<MapObject> collisionList = target.GetCollisionList();
+                        for (int i = 0; i < collisionList.Count; i++)
+                        {
+                            if(collisionList[i].GetObjectType()== eMapObjectType.MONSTER)
+                            {
+                                target.Draw(Color.blue);
+                                _character.SetTargetTileCell(target);
+                                //hit.transform.GetComponent<SpriteRenderer>().color = Color.blue;
+                                _nextState = eStateType.PATHFINDING;
+                            }
+                        }
                     }
                 }
             }

@@ -30,51 +30,16 @@ public class PathFindingTestMove : State
             toPosition.x = nextTileCell.GetTileX();
             toPosition.y = nextTileCell.GetTileY();
 
-            eMoveDirection direction = GetDirection(curPosition, toPosition);
+            eMoveDirection direction = _character.GetDirection(curPosition, toPosition);
             _character.SetNextDirection(direction);
-            _character.MoveStart(nextTileCell.GetTileX(), nextTileCell.GetTileY());
-            //if ()
-            //{
-            //    _character.SetNextDirection(eMoveDirection.NONE);
-            //}
+            if (false == _character.MoveStart(nextTileCell.GetTileX(), nextTileCell.GetTileY()))
+            {
+                _nextState = eStateType.BATTLE;
+            }
         }
         else
         {
             _nextState = eStateType.IDLE;
         }
     }
-    private eMoveDirection GetDirection(sPosition curPosition, sPosition toPosition)
-    {
-        if (toPosition.x < curPosition.x) return eMoveDirection.LEFT;
-        if (toPosition.x > curPosition.x) return eMoveDirection.RIGHT;
-        if (toPosition.y < curPosition.y) return eMoveDirection.UP;
-        if (toPosition.y > curPosition.y) return eMoveDirection.DOWN;
-        return eMoveDirection.DOWN;
-    }
-    //private eMoveDirection GetMoveDirection(TileCell nextTileCell)
-    //{
-    //    if (_character.GetTileX() == nextTileCell.GetTileX())
-    //    {
-    //        if (_character.GetTileY() < nextTileCell.GetTileY())
-    //        {
-    //            return eMoveDirection.DOWN;
-    //        }
-    //        else if (_character.GetTileY() > nextTileCell.GetTileY())
-    //        {
-    //            return eMoveDirection.UP;
-    //        }
-    //    }
-    //    if (_character.GetTileY() == nextTileCell.GetTileY())
-    //    {
-    //        if (_character.GetTileX() < nextTileCell.GetTileX())
-    //        {
-    //            return eMoveDirection.RIGHT;
-    //        }
-    //        else if (_character.GetTileX() > nextTileCell.GetTileX())
-    //        {
-    //            return eMoveDirection.LEFT;
-    //        }
-    //    }
-    //    return eMoveDirection.NONE;
-    //}
 }

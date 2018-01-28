@@ -12,6 +12,7 @@ public enum eStateType
     DEATH,
     PATHFINDING,
     BUILD_PATH,
+    BATTLE,
 }
 public class State
 {
