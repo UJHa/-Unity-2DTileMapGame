@@ -83,7 +83,7 @@ public class PathFindingState : State
             if (false == command.tileCell.IsVisited())
             {
                 command.tileCell.SetVisit(true);
-                command.tileCell.Draw(Color.blue);
+                //command.tileCell.Draw(Color.blue);
 
                 //가져온 커맨드의 현재 타일셀이 목표 타일일 경우 nextState 변경
                 if (_character.GetTargetTileCell() == command.tileCell)
@@ -109,7 +109,7 @@ public class PathFindingState : State
                     tileY = command.tileCell.GetTileY();
 
                     // nextTileCell 방문 안했고, 움직일수 있는 타일일때
-                    if (false == nextTileCell.IsVisited())
+                    if (true == nextTileCell.IsPathfindable() && false == nextTileCell.IsVisited())
                     {
                         float distanceFromStart = command.tileCell.GetDistanceFromStart() + nextTileCell.GetDistanceFromWeight();
                         //float heuristic = distanceFromStart;
@@ -143,34 +143,34 @@ public class PathFindingState : State
                                 }
                             }
                         }
-                        else //canMove false 일때
-                        {
-                            if(_character.GetTargetTileCell()==nextTileCell)
-                            {
-                                nextTileCell.SetDistanceFromStart(distanceFromStart);
-                                nextTileCell.SetPrevTileCell(command.tileCell);
+                        //else //canMove false 일때
+                        //{
+                        //    if(_character.GetTargetTileCell()==nextTileCell)
+                        //    {
+                        //        nextTileCell.SetDistanceFromStart(distanceFromStart);
+                        //        nextTileCell.SetPrevTileCell(command.tileCell);
 
-                                sPathCommand nextCommand;
-                                nextCommand.tileCell = nextTileCell;
-                                nextCommand.heuristic = heuristic;
-                                PushPathfindingQueue(nextCommand);
-                            }
-                            //List<MapObject> collisionList = _character.GetTargetTileCell().GetCollisionList();
-                            //for (int i = 0; i < collisionList.Count; i++)
-                            //{
-                            //    if (eMapObjectType.MONSTER == collisionList[i].GetObjectType())
-                            //    {
-                            //        nextTileCell.SetDistanceFromStart(distanceFromStart);
-                            //        nextTileCell.SetPrevTileCell(command.tileCell);
+                        //        sPathCommand nextCommand;
+                        //        nextCommand.tileCell = nextTileCell;
+                        //        nextCommand.heuristic = heuristic;
+                        //        PushPathfindingQueue(nextCommand);
+                        //    }
+                        //    //List<MapObject> collisionList = _character.GetTargetTileCell().GetCollisionList();
+                        //    //for (int i = 0; i < collisionList.Count; i++)
+                        //    //{
+                        //    //    if (eMapObjectType.MONSTER == collisionList[i].GetObjectType())
+                        //    //    {
+                        //    //        nextTileCell.SetDistanceFromStart(distanceFromStart);
+                        //    //        nextTileCell.SetPrevTileCell(command.tileCell);
 
-                            //        sPathCommand nextCommand;
-                            //        nextCommand.tileCell = nextTileCell;
-                            //        nextCommand.heuristic = heuristic;
-                            //        PushPathfindingQueue(nextCommand);
-                            //        break;
-                            //    }
-                            //}
-                        }
+                        //    //        sPathCommand nextCommand;
+                        //    //        nextCommand.tileCell = nextTileCell;
+                        //    //        nextCommand.heuristic = heuristic;
+                        //    //        PushPathfindingQueue(nextCommand);
+                        //    //        break;
+                        //    //    }
+                        //    //}
+                        //}
                     }
                 }
             }

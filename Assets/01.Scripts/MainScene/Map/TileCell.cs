@@ -95,6 +95,22 @@ public class TileCell
         _isVisit = isVisited;
     }
     public bool IsVisited() { return _isVisit; }
+
+    public bool IsPathfindable()
+    {
+        for (int layer = 0; layer < (int)eTileLayer.MAXCOUNT; layer++)
+        {
+            List<MapObject> objectList = _mapObjectMap[layer];
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                if( eMapObjectType.MONSTER != objectList[i].GetObjectType() &&
+                    false == objectList[i].CanMove())
+                    return false;
+            }
+        }
+        return true;
+    }
+
     public void Draw(Color color)
     {
         List<MapObject> objectList = _mapObjectMap[(int)eTileLayer.GROUND];

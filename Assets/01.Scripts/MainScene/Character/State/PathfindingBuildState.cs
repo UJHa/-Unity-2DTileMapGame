@@ -14,13 +14,21 @@ public class PathfindingBuildState : State
     {
         base.Update();
 
-        if (null != _reverseTileCell.GetPrevTileCell())
+        while (null != _reverseTileCell.GetPrevTileCell())
         {
-            _character.PushPathTileCell(_reverseTileCell);
-            _reverseTileCell.Draw(Color.white);
-            _reverseTileCell = _reverseTileCell.GetPrevTileCell();
+            if (null != _reverseTileCell.GetPrevTileCell())
+            {
+                _character.PushPathTileCell(_reverseTileCell);
+                //_reverseTileCell.Draw(Color.white);
+                _reverseTileCell = _reverseTileCell.GetPrevTileCell();
+            }
+            //else
+            //{
+            //    _nextState = eStateType.MOVE;
+            //    break;
+            //}
         }
-        else
+        if (null == _reverseTileCell.GetPrevTileCell())
         {
             _nextState = eStateType.MOVE;
         }

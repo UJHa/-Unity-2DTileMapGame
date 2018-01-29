@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class PathFindingImmidiateState : PathFindingState
 {
-    //override protected void UpdatePathFinding()
-    //{
-    //    while (0 != _pathfindingQueue.Count)
-    //    {
-    //        base.UpdatePathFinding();
-    //    }
-    //}
+    override public void Start()
+    {
+        base.Start();
+        while (0 != _pathfindingQueue.Count)
+        {
+            UpdatePathFinding();
+        }
+    }
 }

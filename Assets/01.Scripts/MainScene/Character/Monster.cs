@@ -7,7 +7,7 @@ public class Monster : Character
     void Start()
     {
         _type = eMapObjectType.MONSTER;
-        _coolTime = 2.0f;
+        _attackCoolTime = 2.0f;
     }
 
     override protected void InitState()

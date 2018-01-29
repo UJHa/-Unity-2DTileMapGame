@@ -18,6 +18,13 @@ public class PathFindingTestMove : State
     override public void Update()
     {
         base.Update();
+        if(_character.IsMovePossible())
+        {
+            UpdateMove();
+        }
+    }
+    private void UpdateMove()
+    {
         if(false == _character.IsEmptyPathfindingTileCell())
         {
             TileCell nextTileCell = _character.PopPathTileCell();
@@ -35,6 +42,10 @@ public class PathFindingTestMove : State
             if (false == _character.MoveStart(nextTileCell.GetTileX(), nextTileCell.GetTileY()))
             {
                 _nextState = eStateType.BATTLE;
+            }
+            else
+            {
+                _nextState = eStateType.IDLE;
             }
         }
         else

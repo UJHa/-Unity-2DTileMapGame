@@ -29,14 +29,24 @@ public class Character : MapObject
     {
         //if (false == _isLive)
         //    return;
+        if (eStateType.NONE != _state.GetNextState())
+        {
+            ChangeState(_state.GetNextState());
+        }
+
         _state.Update();
-        if (_coolTime <= _deltaCoolTime)
-            _deltaCoolTime = _coolTime;
+        if (_attackCoolTime <= _deltaAttackCoolTime)
+            _deltaAttackCoolTime = _attackCoolTime;
         else
-            _deltaCoolTime += Time.deltaTime;
+            _deltaAttackCoolTime += Time.deltaTime;
+
+        if (_moveCoolTime <= _deltaMoveCoolTime)
+            _deltaMoveCoolTime = _moveCoolTime;
+        else
+            _deltaMoveCoolTime += Time.deltaTime;
 
         _hpGuage.value = _hp / 100.0f;
-        _coolTimeGuage.value = _deltaCoolTime / _coolTime;
+        _coolTimeGuage.value = _deltaAttackCoolTime / _attackCoolTime;
     }
     public void Init(string viewName)
     {
@@ -105,7 +115,7 @@ public class Character : MapObject
         }
         _state = _stateMap[eStateType.IDLE];
     }
-    public void ChangeState(eStateType nextState)
+    private void ChangeState(eStateType nextState)
     {
         if (null != _state)
             _state.Stop();
@@ -140,6 +150,7 @@ public class Character : MapObject
     // Actions
     public bool MoveStart(int moveX, int moveY)
     {
+        ResetMoveCooltime();
         string animationTrigger = "down";
         switch (_nextDirection)
         {
@@ -166,7 +177,7 @@ public class Character : MapObject
     }
     public void Attack(MapObject enemy)
     {
-        ResetCooltime();
+        ResetAttackCooltime();
         MessageParam msgParam = new MessageParam();
         msgParam.sender = this;
         msgParam.receiver = enemy;
@@ -174,20 +185,6 @@ public class Character : MapObject
         msgParam.message = "Attack";
 
         MessageSystem.Instance.Send(msgParam);
-    }
-    protected float _coolTime = 1.5f;
-    float _deltaCoolTime = 0.0f;
-    public bool IsAttackPossible()
-    {
-        if (_coolTime <= _deltaCoolTime)
-        {
-            return true;
-        }
-        return false;
-    }
-    void ResetCooltime()
-    {
-        _deltaCoolTime = 0.0f;
     }
 
     public void DecreaseHP(int damagePoint)
@@ -216,6 +213,38 @@ public class Character : MapObject
     {
         _characterView.GetComponent<SpriteRenderer>().color = Color.white;
     }
+
+    //coolTime
+    protected float _attackCoolTime = 1.5f;
+    float _deltaAttackCoolTime = 0.0f;
+    public bool IsAttackPossible()
+    {
+        if (_attackCoolTime <= _deltaAttackCoolTime)
+        {
+            return true;
+        }
+        return false;
+    }
+    void ResetAttackCooltime()
+    {
+        _deltaAttackCoolTime = 0.0f;
+    }
+
+    protected float _moveCoolTime = 0.3f;
+    float _deltaMoveCoolTime = 0.0f;
+    public bool IsMovePossible()
+    {
+        if (_moveCoolTime <= _deltaMoveCoolTime)
+        {
+            return true;
+        }
+        return false;
+    }
+    void ResetMoveCooltime()
+    {
+        _deltaMoveCoolTime = 0.0f;
+    }
+
     //pathfinding
     private TileCell _targetTileCell;
     public void SetTargetTileCell(TileCell tileCell)
@@ -269,7 +298,7 @@ public class Character : MapObject
         coolTimeGuage.transform.localScale = Vector3.one;
 
         _coolTimeGuage = coolTimeGuage;
-        _coolTimeGuage.value = _deltaCoolTime / _coolTime;
+        _coolTimeGuage.value = _deltaAttackCoolTime / _attackCoolTime;
     }
 
     //position
