@@ -58,15 +58,24 @@ public class Character : MapObject
         _characterView.transform.localPosition = Vector3.zero;
         _characterView.transform.localScale = Vector3.one;
 
+        InitPosition();
+        InitState();
+    }
+
+    void InitPosition()
+    {
         TileMap map = GameManager.Instance.GetMap();
-        _tileX = 0;//Random.Range(1, map.GetWidth() - 2);
-        _tileY = 3;//Random.Range(1, map.GetHeight() - 2);
-        
+        _tileX = Random.Range(1, map.GetWidth() - 2);
+        _tileY = Random.Range(1, map.GetHeight() - 2);
+
+        while(false == map.GetTileCell(_tileX, _tileY).CanMove())
+        {
+            _tileX = Random.Range(1, map.GetWidth() - 2);
+            _tileY = Random.Range(1, map.GetHeight() - 2);
+        }
         map.SetObject(_tileX, _tileY, this, eTileLayer.MIDDLE);
 
         SetCanMove(false);
-
-        InitState();
     }
 
     eMoveDirection _nextDirection = eMoveDirection.NONE;

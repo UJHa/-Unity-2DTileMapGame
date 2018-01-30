@@ -19,7 +19,7 @@ public class PathfindingBuildState : State
             if (null != _reverseTileCell.GetPrevTileCell())
             {
                 _character.PushPathTileCell(_reverseTileCell);
-                //_reverseTileCell.Draw(Color.white);
+                _reverseTileCell.Draw(Color.white);
                 _reverseTileCell = _reverseTileCell.GetPrevTileCell();
             }
             //else

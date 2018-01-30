@@ -43,7 +43,7 @@ public class PathFindingState : State
         base.Stop();
         _pathfindingQueue.Clear();
     }
-    private sPosition GetPositionByDirection(sPosition curPosition, int direction)
+    protected sPosition GetPositionByDirection(sPosition curPosition, int direction)
     {
         sPosition position = curPosition;
         eMoveDirection moveDirection = (eMoveDirection)direction;
@@ -109,16 +109,14 @@ public class PathFindingState : State
                     tileY = command.tileCell.GetTileY();
 
                     // nextTileCell 방문 안했고, 움직일수 있는 타일일때
-                    if (true == nextTileCell.IsPathfindable() && false == nextTileCell.IsVisited())
+                    if (null != nextTileCell && true == nextTileCell.IsPathfindable() && false == nextTileCell.IsVisited())
                     {
                         float distanceFromStart = command.tileCell.GetDistanceFromStart() + nextTileCell.GetDistanceFromWeight();
                         //float heuristic = distanceFromStart;
                         //float heuristic = CalcSimpleHeuristic(command.tileCell, nextTileCell, _character.GetTargetTileCell());
                         //float heuristic = CalcComplexHeuristic(nextTileCell, _character.GetTargetTileCell());
                         float heuristic = CalcAStarHeuristic(distanceFromStart, nextTileCell, _character.GetTargetTileCell());
-                        if(true == nextTileCell.CanMove())
                         {
-
                             if (null == nextTileCell.GetPrevTileCell())
                             {
                                 nextTileCell.SetDistanceFromStart(distanceFromStart);
@@ -129,9 +127,8 @@ public class PathFindingState : State
                                 nextCommand.heuristic = heuristic;
                                 PushPathfindingQueue(nextCommand);
                             }
-                            else
+                            else if (distanceFromStart < nextTileCell.GetDistanceFromStart())
                             {
-                                if (distanceFromStart < nextTileCell.GetDistanceFromStart())
                                 {
                                     nextTileCell.SetDistanceFromStart(distanceFromStart);
                                     nextTileCell.SetPrevTileCell(command.tileCell);
@@ -176,7 +173,7 @@ public class PathFindingState : State
             }
         }
     }
-    private void PushPathfindingQueue(sPathCommand command)
+    protected void PushPathfindingQueue(sPathCommand command)
     {
         _pathfindingQueue.Add(command);
         _pathfindingQueue.Sort(delegate (sPathCommand cmd, sPathCommand nextCmd)
@@ -242,7 +239,7 @@ public class PathFindingState : State
         float distance = distanceW + distanceH;
         return distance;
     }
-    private float CalcAStarHeuristic(float distanceFromStart, TileCell nextTileCell, TileCell targetTileCell)
+    protected float CalcAStarHeuristic(float distanceFromStart, TileCell nextTileCell, TileCell targetTileCell)
     {
         return distanceFromStart + CalcComplexHeuristic(nextTileCell, targetTileCell);
     }

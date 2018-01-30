@@ -43,10 +43,6 @@ public class PathFindingTestMove : State
             {
                 _nextState = eStateType.BATTLE;
             }
-            else
-            {
-                _nextState = eStateType.IDLE;
-            }
         }
         else
         {
