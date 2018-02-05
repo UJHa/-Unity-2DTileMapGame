@@ -29,6 +29,7 @@ public class BattleState : State
             {
                 for (int i = 0; i < collisionList.Count; i++)
                 {
+                    SoundPlayer.Instance.PlayEffect("player_hit");
                     _character.Attack(collisionList[i]);
                 }
             }

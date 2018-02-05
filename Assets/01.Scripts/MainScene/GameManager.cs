@@ -33,4 +33,7 @@ public class GameManager
     {
         _tileMap = map;
     }
+
+    // 지울 테스트 코드 ( 타겟 설정)
+    public Character targetCharacter;
 }

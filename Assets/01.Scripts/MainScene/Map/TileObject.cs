@@ -23,15 +23,4 @@ public class TileObject : MapObject
         _tileX = tileX;
         _tileY = tileY;
     }
-    //public void SetPosition(Vector2 position)
-    //{
-    //    gameObject.transform.localPosition = position;
-    //}
-
-    ////Sorting
-    //public void SetSortingOrder(int sortingID, int sortingOrder)
-    //{
-    //    gameObject.GetComponent<SpriteRenderer>().sortingLayerID = sortingID;
-    //    gameObject.GetComponent<SpriteRenderer>().sortingOrder= sortingOrder;
-    //}
 }

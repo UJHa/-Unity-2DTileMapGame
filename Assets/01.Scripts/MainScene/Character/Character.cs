@@ -27,14 +27,18 @@ public class Character : MapObject
     // Update is called once per frame
     void Update()
     {
-        //if (false == _isLive)
-        //    return;
         if (eStateType.NONE != _state.GetNextState())
         {
             ChangeState(_state.GetNextState());
         }
 
         _state.Update();
+        UpdateCoolTime();
+
+        UpdateGuage();
+    }
+    void UpdateCoolTime()
+    {
         if (_attackCoolTime <= _deltaAttackCoolTime)
             _deltaAttackCoolTime = _attackCoolTime;
         else
@@ -44,10 +48,15 @@ public class Character : MapObject
             _deltaMoveCoolTime = _moveCoolTime;
         else
             _deltaMoveCoolTime += Time.deltaTime;
-
+    }
+    void UpdateGuage()
+    {
+        if (null == _hpGuage || null == _coolTimeGuage)
+            return;
         _hpGuage.value = _hp / 100.0f;
         _coolTimeGuage.value = _deltaAttackCoolTime / _attackCoolTime;
     }
+
     public void Init(string viewName)
     {
         //View를 붙인다.
@@ -56,7 +65,7 @@ public class Character : MapObject
         _characterView = GameObject.Instantiate(characterViewPrefabs);
         _characterView.transform.SetParent(transform);
         _characterView.transform.localPosition = Vector3.zero;
-        _characterView.transform.localScale = Vector3.one;
+        _characterView.transform.localScale = GameManager.Instance.GetMap().GetLocalScale();
 
         InitPosition();
         InitState();
@@ -77,6 +86,8 @@ public class Character : MapObject
 
         SetCanMove(false);
     }
+
+
 
     eMoveDirection _nextDirection = eMoveDirection.NONE;
     public eMoveDirection GetNextDirection() { return _nextDirection; }
@@ -145,12 +156,12 @@ public class Character : MapObject
                 sPosition curPosition;
                 curPosition.x = _tileX;
                 curPosition.y = _tileY;
-                sPosition attackedPosition;
-                attackedPosition.x = msgParam.sender.GetTileX();
-                attackedPosition.y = msgParam.sender.GetTileY();
-                eMoveDirection direction = GetDirection(curPosition, attackedPosition);
-                SetNextDirection(direction);
-                MoveStart(attackedPosition.x, attackedPosition.y);
+                //sPosition attackedPosition;
+                //attackedPosition.x = msgParam.sender.GetTileX();
+                //attackedPosition.y = msgParam.sender.GetTileY();
+                //eMoveDirection direction = GetDirection(curPosition, attackedPosition);
+                //SetNextDirection(direction);
+                //MoveStart(attackedPosition.x, attackedPosition.y);
                 _state.NextState(eStateType.DAMAGE);
                 break;
         }
@@ -174,7 +185,7 @@ public class Character : MapObject
         TileMap map = GameManager.Instance.GetMap();
 
         List<MapObject> collisionList = map.GetCollisionList(moveX, moveY);
-        if (0 == collisionList.Count)  //이동 가능할때
+        if (null != collisionList) //이동 가능할때
         {
             map.ResetObject(_tileX, _tileY, this);
             _tileX = moveX;
@@ -198,6 +209,11 @@ public class Character : MapObject
 
     public void DecreaseHP(int damagePoint)
     {
+        string filePath = "Prefabs/Effects/DamageEffect";
+        GameObject effectPrefabs = Resources.Load<GameObject>(filePath);
+        GameObject effectObject = GameObject.Instantiate(effectPrefabs, transform.position, Quaternion.identity);
+        GameObject.Destroy(effectObject, 1.0f);
+
         _characterView.GetComponent<SpriteRenderer>().color = Color.red;
         Invoke("ResetColor", 0.1f);
         _hp -= damagePoint;
@@ -285,9 +301,9 @@ public class Character : MapObject
         _pathfindingStack.Clear();
     }
     public Stack<TileCell> GetPathFindingStack() { return _pathfindingStack; }
-    
+
     // UI
-    Slider _hpGuage;
+    Slider _hpGuage = null;
     public void LinkHPGuage(Slider hpGuage)
     {
         GameObject canvasObject = transform.Find("Canvas").gameObject;
@@ -298,7 +314,7 @@ public class Character : MapObject
         _hpGuage = hpGuage;
         _hpGuage.value = _hp / 100.0f;
     }
-    Slider _coolTimeGuage;
+    Slider _coolTimeGuage = null;
     public void LinkCoolTimeGuage(Slider coolTimeGuage)
     {
         GameObject canvasObject = transform.Find("Canvas").gameObject;
@@ -308,6 +324,14 @@ public class Character : MapObject
 
         _coolTimeGuage = coolTimeGuage;
         _coolTimeGuage.value = _deltaAttackCoolTime / _attackCoolTime;
+    }
+
+    public void ShowMoveCursor(Vector3 vector3)
+    {
+        string filePath = "Prefabs/Effects/DamageEffect";
+        GameObject effectPrefabs = Resources.Load<GameObject>(filePath);
+        GameObject effectObject = GameObject.Instantiate(effectPrefabs, vector3, Quaternion.identity);
+        GameObject.Destroy(effectObject, 1.0f);
     }
 
     //position

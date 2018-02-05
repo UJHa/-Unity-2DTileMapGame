@@ -14,66 +14,37 @@ public class PathFindingIdle : State
 
         if (Input.GetMouseButtonDown(0))
         {
-            Vector2 position2D = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Ray2D ray = new Ray2D(position2D, Vector2.zero);
-            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
-            if (hit.collider != null)
+            //Vector3 position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //Ray ray = new Ray(position, Vector3.zero);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if(Physics.Raycast(ray, out hit))
             {
+                //if (hit.transform.GetComponent<MainGameUI>().IsClicked())
+                if (IsClickUI(hit))
+                    return;
                 int targetTileX = hit.transform.GetComponent<MapObject>().GetTileX();
                 int targetTileY = hit.transform.GetComponent<MapObject>().GetTileY();
 
                 TileCell target = GameManager.Instance.GetMap().GetTileCell(targetTileX, targetTileY);
                 if (!(_character.GetTileX() == targetTileX && _character.GetTileY() == targetTileY))    //player위치 제외한 타일셀 클릭 시
                 {
-                    if(target.IsPathfindable())
+                    _character.ShowMoveCursor(hit.transform.GetComponent<MapObject>().transform.position);
+                    if (target.IsPathfindable())
                     {
                         target.Draw(Color.blue);
                         _character.SetTargetTileCell(target);
                         _nextState = eStateType.PATHFINDING;
                     }
-                    //if (target.CanMove())
-                    //{
-                    //    target.Draw(Color.blue);
-                    //    _character.SetTargetTileCell(target);
-                    //    //hit.transform.GetComponent<SpriteRenderer>().color = Color.blue;
-                    //    _nextState = eStateType.PATHFINDING;
-                    //}
-                    //else
-                    //{
-                    //    List<MapObject> collisionList = target.GetCollisionList();
-                    //    for (int i = 0; i < collisionList.Count; i++)
-                    //    {
-                    //        if(collisionList[i].GetObjectType()== eMapObjectType.MONSTER)
-                    //        {
-                    //            target.Draw(Color.blue);
-                    //            _character.SetTargetTileCell(target);
-                    //            //hit.transform.GetComponent<SpriteRenderer>().color = Color.blue;
-                    //            _nextState = eStateType.PATHFINDING;
-                    //        }
-                    //    }
-                    //}
                 }
             }
-            //if (null == _character.GetTargetTileCell()) 
-            //{
-            //    _nextState = eStateType.IDLE;
-            //}
-            //RaycastHit hit;
-            //Ray ray = camera.ScreenPointToRay(Input.mousePosition);
-
-            //if (Physics.Raycast(ray, out hit))
-            //{
-            //    //hit.transform.GetComponent<SpriteRenderer>().color = Color.blue;
-
-            //    int targetTileX = hit.transform.GetComponent<MapObject>().GetTileX();
-            //    int targetTileY = hit.transform.GetComponent<MapObject>().GetTileY();
-
-            //    if (!(_character.GetTileX() == targetTileX && _character.GetTileY() == targetTileY))
-            //    {
-            //        _character.SetTargetTileCell(targetTileX, targetTileY);
-            //        _nextState = eStateType.MOVE;
-            //    }
-            //}
         }
+    }
+    bool IsClickUI(RaycastHit hit)
+    {
+        //if (hit.transform.GetComponent<MainGameUI>().button == new MainGameUI().button)
+        if (hit.transform.GetComponent<MainGameUI>().button)
+                return true;
+        return false;
     }
 }

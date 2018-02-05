@@ -17,21 +17,19 @@ public class TileMap : MonoBehaviour
 
     }
     //SpriteList
-    Sprite[] _spriteArray;
+    protected Sprite[] _spriteArray;
     public void Init()
     {
         _spriteArray = Resources.LoadAll<Sprite>("Sprites/MapSprite");
-        //CreateTiles();
-        CreateRandomMaze();
+        CreateMap();
     }
     //Tile
-
     public GameObject TileObjectPrefabs;
 
-    int _width;
-    int _height;
+    protected int _width;
+    protected int _height;
 
-    TileCell[,] _tileCellList;
+    protected TileCell[,] _tileCellList;
 
     public int GetWidth()
     {
@@ -47,10 +45,23 @@ public class TileMap : MonoBehaviour
             return _tileCellList[tileY, tileX];
         return null;
     }
+    protected Vector3 _tileScale = Vector3.one;
+    public Vector3 GetLocalScale()
+    {
+        return _tileScale;
+    }
+
+    virtual public void CreateMap()
+    {
+        //CreateTiles();
+        CreateRandomMaze();
+    }
 
     void CreateTiles()
     {
-        float tileSize = 32.0f;
+        float scale = 1.0f; // 화면에 보이는 크기 배수
+        float tileSize = 32.0f * scale;
+        _tileScale = new Vector3(scale, scale);
 
         //1층
         TextAsset scriptAsset = Resources.Load<TextAsset>("Data/Map1Data_layer1");
@@ -73,7 +84,7 @@ public class TileMap : MonoBehaviour
 
                 GameObject tileGameObject = GameObject.Instantiate(TileObjectPrefabs);
                 tileGameObject.transform.SetParent(transform);
-                tileGameObject.transform.localScale = Vector3.one;
+                tileGameObject.transform.localScale = _tileScale;
                 tileGameObject.transform.localPosition = Vector3.zero;
 
                 TileObject tileObject = tileGameObject.GetComponent<TileObject>();
@@ -102,7 +113,7 @@ public class TileMap : MonoBehaviour
                 {
                     GameObject tileGameObject = GameObject.Instantiate(TileObjectPrefabs);
                     tileGameObject.transform.SetParent(transform);
-                    tileGameObject.transform.localScale = Vector3.one;
+                    tileGameObject.transform.localScale = _tileScale;
                     tileGameObject.transform.localPosition = Vector3.zero;
 
                     TileObject tileObject = tileGameObject.GetComponent<TileObject>();
@@ -116,8 +127,9 @@ public class TileMap : MonoBehaviour
 
     void CreateRandomMaze()
     {
-        float tileSize = 32.0f;
-
+        float scale = 1.0f; // 화면에 보이는 크기 배수
+        float tileSize = 32.0f * scale;
+        _tileScale = new Vector3(scale, scale);
         //1층
         TextAsset scriptAsset = Resources.Load<TextAsset>("Data/Map1Data_layer1");
         string[] records = scriptAsset.text.Split('\n');
@@ -139,7 +151,7 @@ public class TileMap : MonoBehaviour
 
                 GameObject tileGameObject = GameObject.Instantiate(TileObjectPrefabs);
                 tileGameObject.transform.SetParent(transform);
-                tileGameObject.transform.localScale = Vector3.one;
+                tileGameObject.transform.localScale = _tileScale;
                 tileGameObject.transform.localPosition = Vector3.zero;
 
                 TileObject tileObject = tileGameObject.GetComponent<TileObject>();
@@ -169,7 +181,7 @@ public class TileMap : MonoBehaviour
                             int spriteIndex = 127;
                             GameObject tileGameObject = GameObject.Instantiate(TileObjectPrefabs);
                             tileGameObject.transform.SetParent(transform);
-                            tileGameObject.transform.localScale = Vector3.one;
+                            tileGameObject.transform.localScale = _tileScale;
                             tileGameObject.transform.localPosition = Vector3.zero;
 
                             TileObject tileObject = tileGameObject.GetComponent<TileObject>();
@@ -210,7 +222,7 @@ public class TileMap : MonoBehaviour
                                         int spriteIndex = 127;
                                         GameObject tileGameObject = GameObject.Instantiate(TileObjectPrefabs);
                                         tileGameObject.transform.SetParent(transform);
-                                        tileGameObject.transform.localScale = Vector3.one;
+                                        tileGameObject.transform.localScale = _tileScale;
                                         tileGameObject.transform.localPosition = Vector3.zero;
 
                                         TileObject tileObject = tileGameObject.GetComponent<TileObject>();

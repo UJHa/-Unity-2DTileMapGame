@@ -30,4 +30,19 @@ public class MainGameUI : MonoBehaviour
 
         return slider;
     }
+    public Button button;
+    //button action
+    public void OnAttack()
+    {
+        Debug.Log("그만눌러!");
+        Character target = GameManager.Instance.targetCharacter;
+
+        MessageParam msgParam = new MessageParam();
+        msgParam.sender = null;
+        msgParam.receiver = target;
+        msgParam.attackPoint = 100;
+        msgParam.message = "Attack";
+
+        MessageSystem.Instance.Send(msgParam);
+    }
 }

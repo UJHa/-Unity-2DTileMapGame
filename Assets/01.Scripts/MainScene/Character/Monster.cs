@@ -8,8 +8,8 @@ public class Monster : Character
     {
         _type = eMapObjectType.MONSTER;
         _attackCoolTime = 2.0f;
+        _moveCoolTime = 2.0f;
     }
-
     override protected void InitState()
     {
         base.InitState();
