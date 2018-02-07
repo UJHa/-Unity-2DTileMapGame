@@ -31,8 +31,22 @@ public class MainGameScene : MonoBehaviour {
 
         CreateCharacter("Player", "character01").BecomeViewer();
         CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
+        CreateCharacter("Monster", "character02");
 
-        GameManager.Instance.targetCharacter = CreateCharacter("Monster", "character02");
+        //GameManager.Instance.targetCharacter = CreateCharacter("Monster", "character02");
         //player.BecomeViewer();
     }
     Character CreateCharacter(string fileName,string resourceName)
@@ -61,6 +75,10 @@ public class MainGameScene : MonoBehaviour {
         Slider coolTimeGuage = GameUI.CreateCoolTimeSlider();
         character.LinkCoolTimeGuage(coolTimeGuage);
 
+        Text textLevel = GameUI.CreateLevelText();
+        character.LinkTextLevel(textLevel);
+        Text textEXP= GameUI.CreateEXPText();
+        character.LinkTextEXP(textEXP);
         return character;
     }
 }

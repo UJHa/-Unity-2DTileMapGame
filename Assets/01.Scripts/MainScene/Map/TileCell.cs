@@ -83,6 +83,12 @@ public class TileCell
         }
         return collisionList;
     }
+    public List<MapObject> GetMapObjectList(eTileLayer layer)
+    {
+        if (0 == _mapObjectMap[(int)layer].Count)
+            return null;
+        return _mapObjectMap[(int)layer];
+    }
     //visit
     public void ResetPathFinding()
     {

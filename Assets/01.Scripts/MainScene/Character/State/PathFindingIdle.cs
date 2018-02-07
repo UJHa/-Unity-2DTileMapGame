@@ -20,9 +20,6 @@ public class PathFindingIdle : State
             RaycastHit hit;
             if(Physics.Raycast(ray, out hit))
             {
-                //if (hit.transform.GetComponent<MainGameUI>().IsClicked())
-                if (IsClickUI(hit))
-                    return;
                 int targetTileX = hit.transform.GetComponent<MapObject>().GetTileX();
                 int targetTileY = hit.transform.GetComponent<MapObject>().GetTileY();
 
@@ -39,12 +36,5 @@ public class PathFindingIdle : State
                 }
             }
         }
-    }
-    bool IsClickUI(RaycastHit hit)
-    {
-        //if (hit.transform.GetComponent<MainGameUI>().button == new MainGameUI().button)
-        if (hit.transform.GetComponent<MainGameUI>().button)
-                return true;
-        return false;
     }
 }

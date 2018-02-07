@@ -17,7 +17,7 @@ public class TitleTileMap : TileMap
 
     override public void CreateMap()
     {
-        float scale = 3.0f;
+        float scale = 7.0f;
         float tileSize = 32.0f * scale;
         _tileScale = new Vector3(scale, scale);
 
@@ -54,7 +54,7 @@ public class TitleTileMap : TileMap
                 float pixelWidth = _width * tileSize / 100.0f;
                 float pixelHeight = _height * tileSize / 100.0f;
                 //GetTileCell(x, y).SetPosition(x * tileSize / 100.0f, -y * tileSize / 100.0f);
-                GetTileCell(x, y).SetPosition(x * tileSize / 100.0f - pixelWidth / 2.0f, -y * tileSize / 100.0f + pixelHeight / 2.0f);
+                GetTileCell(x, y).SetPosition(x * tileSize / 100.0f - pixelWidth / 2.0f, - y * tileSize / 100.0f + pixelHeight / 2.0f);
                 GetTileCell(x, y).SetTilePosition(x, y);
 
                 GetTileCell(x, y).AddObject(eTileLayer.GROUND, tileObject);

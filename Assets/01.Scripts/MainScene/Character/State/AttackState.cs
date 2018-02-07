@@ -20,7 +20,7 @@ public class AttackState : State
 
         TileMap map = GameManager.Instance.GetMap();
         List<MapObject> collisionList = map.GetCollisionList(moveX, moveY);
-        if(null != collisionList)
+        if(null != collisionList && 0 == collisionList.Count)
         {
             for (int i = 0; i < collisionList.Count; i++)
             {

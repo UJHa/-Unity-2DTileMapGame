@@ -152,17 +152,24 @@ public class Character : MapObject
             case "Attack":
                 Debug.Log("recevie Attack!");
                 _damagePoint = msgParam.attackPoint;
+                SetAttacker(msgParam.sender);
 
                 sPosition curPosition;
                 curPosition.x = _tileX;
                 curPosition.y = _tileY;
-                //sPosition attackedPosition;
-                //attackedPosition.x = msgParam.sender.GetTileX();
-                //attackedPosition.y = msgParam.sender.GetTileY();
-                //eMoveDirection direction = GetDirection(curPosition, attackedPosition);
-                //SetNextDirection(direction);
-                //MoveStart(attackedPosition.x, attackedPosition.y);
+                sPosition attackedPosition;
+                attackedPosition.x = msgParam.sender.GetTileX();
+                attackedPosition.y = msgParam.sender.GetTileY();
+                eMoveDirection direction = GetDirection(curPosition, attackedPosition);
+                SetNextDirection(direction);
+                MoveStart(attackedPosition.x, attackedPosition.y);
                 _state.NextState(eStateType.DAMAGE);
+                break;
+            case "IsDead":
+                Debug.Log("I'm dead!");
+                Character msgSender = (Character)msgParam.sender;
+                Debug.Log(msgSender.GetEXP());
+                IncreaseEXP(msgSender.GetEXP());
                 break;
         }
     }
@@ -185,12 +192,23 @@ public class Character : MapObject
         TileMap map = GameManager.Instance.GetMap();
 
         List<MapObject> collisionList = map.GetCollisionList(moveX, moveY);
-        if (null != collisionList) //이동 가능할때
+        if (null != collisionList && 0 == collisionList.Count) //이동 가능할때
         {
             map.ResetObject(_tileX, _tileY, this);
             _tileX = moveX;
             _tileY = moveY;
             map.SetObject(_tileX, _tileY, this, eTileLayer.MIDDLE);
+            //pick message 주기
+            List<MapObject> mapObejctList = map.GetTileCell(_tileX, _tileY).GetMapObjectList(eTileLayer.MIDDLE);
+            for (int i = 0; i < mapObejctList.Count; i++)
+            {
+                MessageParam msgParam = new MessageParam();
+                msgParam.sender = this;
+                msgParam.receiver = mapObejctList[i];
+                msgParam.message = "pick";
+
+                MessageSystem.Instance.Send(msgParam);
+            }
             return true;
         }
         return false;
@@ -207,6 +225,10 @@ public class Character : MapObject
         MessageSystem.Instance.Send(msgParam);
     }
 
+    public bool IsLive()
+    {
+        return _isLive;
+    }
     public void DecreaseHP(int damagePoint)
     {
         string filePath = "Prefabs/Effects/DamageEffect";
@@ -221,22 +243,62 @@ public class Character : MapObject
         if (_hp <= 0)
         {
             _isLive = false;
-            Debug.Log("Death!");
             _hp = 0;
         }
     }
-    public bool IsLive()
-    {
-        return _isLive;
-    }
+
     int _damagePoint;
     public int GetDamagePoint()
     {
         return _damagePoint;
     }
+    MapObject _attacker;
+    public MapObject GetAttacker()
+    {
+        return _attacker;
+    }
+    public void SetAttacker(MapObject attacker)
+    {
+        _attacker = attacker;
+    }
+
+    public void DropItem()
+    {
+        string filePath = "Prefabs/ItemView/item_coin";
+        GameObject itemPrefabs = Resources.Load<GameObject>(filePath);
+        GameObject itemObj = GameObject.Instantiate(itemPrefabs);
+        itemObj.transform.SetParent(GameManager.Instance.GetMap().transform);
+        itemObj.transform.localPosition = Vector3.zero;
+        itemObj.transform.localScale = GameManager.Instance.GetMap().GetLocalScale();
+        Item item = itemObj.AddComponent<Item>();
+        item.Init(_tileX, _tileY);
+    }
+
     void ResetColor()
     {
         _characterView.GetComponent<SpriteRenderer>().color = Color.white;
+    }
+    //level
+    int _level = 1;
+    int _expPoint = 5;
+    int _myExp = 0;
+    public int GetEXP()
+    {
+        return _expPoint;
+    }
+    public void IncreaseEXP(int expPoint)
+    {
+        _myExp += expPoint;
+        if(10 <= _myExp)
+        {
+            _myExp = 0;
+            //레벨 업 기능
+            _hp = 100;
+            _attackPoint *= 2;
+            _level++;
+            _textLevel.text = "level "+ _level;
+        }
+        _textExp.text = "exp " + _myExp;
     }
 
     //coolTime
@@ -325,13 +387,33 @@ public class Character : MapObject
         _coolTimeGuage = coolTimeGuage;
         _coolTimeGuage.value = _deltaAttackCoolTime / _attackCoolTime;
     }
+    Text _textLevel = null;
+    public void LinkTextLevel(Text text)
+    {
+        GameObject canvasObject = transform.Find("Canvas").gameObject;
+        text.transform.SetParent(canvasObject.transform);
+        text.transform.localPosition = new Vector3(0.0f, 0.5f, 0.0f);
+        text.transform.localScale = Vector3.one;
+
+        _textLevel = text;
+    }
+    Text _textExp = null;
+    public void LinkTextEXP(Text text)
+    {
+        GameObject canvasObject = transform.Find("Canvas").gameObject;
+        text.transform.SetParent(canvasObject.transform);
+        text.transform.localPosition = new Vector3(0.0f, -0.8f, 0.0f);
+        text.transform.localScale = Vector3.one;
+
+        _textExp = text;
+    }
 
     public void ShowMoveCursor(Vector3 vector3)
     {
         string filePath = "Prefabs/Effects/DamageEffect";
         GameObject effectPrefabs = Resources.Load<GameObject>(filePath);
         GameObject effectObject = GameObject.Instantiate(effectPrefabs, vector3, Quaternion.identity);
-        GameObject.Destroy(effectObject, 1.0f);
+        GameObject.Destroy(effectObject, 0.5f);
     }
 
     //position
