@@ -585,6 +585,10 @@ MonoBehaviour:
     type: 2}
   coolTimeGuagePrefabs: {fileID: 1158744883361508, guid: 18827f7adf7154a42a088a9eca95e065,
     type: 2}
+  levelTextPrefabs: {fileID: 1323093737090538, guid: 8b7583dbd8a5ce54188420720d11b0cf,
+    type: 2}
+  expTextPrefabs: {fileID: 1323093737090538, guid: 6f0f918e690707a49b062b4cfdb6cca9,
+    type: 2}
   button: {fileID: 1961994915}
 --- !u!114 &2005416625
 MonoBehaviour:
