@@ -262,16 +262,11 @@ public class Character : MapObject
         _attacker = attacker;
     }
 
+    int _itemIndex = 30;
     public void DropItem()
     {
-        string filePath = "Prefabs/ItemView/item_coin";
-        GameObject itemPrefabs = Resources.Load<GameObject>(filePath);
-        GameObject itemObj = GameObject.Instantiate(itemPrefabs);
-        itemObj.transform.SetParent(GameManager.Instance.GetMap().transform);
-        itemObj.transform.localPosition = Vector3.zero;
-        itemObj.transform.localScale = GameManager.Instance.GetMap().GetLocalScale();
-        Item item = itemObj.AddComponent<Item>();
-        item.Init(_tileX, _tileY);
+        //_itemIndex = Random.Range(0, 3);
+        ItemCreator.Instance.CreateItem(_itemIndex , _tileX, _tileY);
     }
 
     void ResetColor()

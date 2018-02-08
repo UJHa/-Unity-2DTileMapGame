@@ -18,27 +18,8 @@ public class Item : MapObject
         {
             case "pick":
                 Debug.Log("I'm picked!");
-                
-                //_damagePoint = msgParam.attackPoint;
-                //SetAttacker(msgParam.sender);
-
-                //sPosition curPosition;
-                //curPosition.x = _tileX;
-                //curPosition.y = _tileY;
-                //sPosition attackedPosition;
-                //attackedPosition.x = msgParam.sender.GetTileX();
-                //attackedPosition.y = msgParam.sender.GetTileY();
-                //eMoveDirection direction = GetDirection(curPosition, attackedPosition);
-                //SetNextDirection(direction);
-                //MoveStart(attackedPosition.x, attackedPosition.y);
-                //_state.NextState(eStateType.DAMAGE);
+                this.gameObject.SetActive(false);
                 break;
-            //case "IsDead":
-            //    Debug.Log("I'm dead!");
-            //    Character msgSender = (Character)msgParam.sender;
-            //    Debug.Log(msgSender.GetEXP());
-            //    IncreaseEXP(msgSender.GetEXP());
-            //    break;
         }
     }
 }

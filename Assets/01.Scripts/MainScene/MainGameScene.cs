@@ -26,6 +26,7 @@ public class MainGameScene : MonoBehaviour {
     }
     void Init()
     {
+        Debug.Log(GameDataManager.Instance.GetNumber());
         _tileMap.Init();
         GameManager.Instance.SetMap(_tileMap);
 
@@ -48,6 +49,7 @@ public class MainGameScene : MonoBehaviour {
 
         //GameManager.Instance.targetCharacter = CreateCharacter("Monster", "character02");
         //player.BecomeViewer();
+
     }
     Character CreateCharacter(string fileName,string resourceName)
     {
@@ -58,6 +60,7 @@ public class MainGameScene : MonoBehaviour {
         charGameObject.transform.SetParent(_tileMap.transform);
         charGameObject.transform.localPosition = Vector3.zero;
         Character character = charGameObject.GetComponent<Player>();
+        //Character character = GameDataManager.Instance.GetPlayer();
         switch (fileName)
         {
             case "Player":

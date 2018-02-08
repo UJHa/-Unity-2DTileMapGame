@@ -10,7 +10,7 @@ public class TitleScene : MonoBehaviour {
     void Start () {
         Init();
     }
-	
+
 	// Update is called once per frame
 	void Update () {
         if (Input.GetButtonDown("Jump"))
@@ -20,6 +20,7 @@ public class TitleScene : MonoBehaviour {
 
     void Init()
     {
+        GameDataManager.Instance.SetNumber(3);
         _tileMap.Init();
         GameManager.Instance.SetMap(_tileMap);
 
