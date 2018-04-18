@@ -1,8 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+public struct sPosition
+{
+    public int x;
+    public int y;
+}
 public class MainGameScene : MonoBehaviour {
 
     public MainGameUI GameUI;
@@ -18,15 +24,25 @@ public class MainGameScene : MonoBehaviour {
 	void Update ()
     {
         MessageSystem.Instance.ProcessMessage();
+        if (Input.GetButtonDown("Jump"))
+        {
+            SceneManager.LoadScene("ResultScene");
+            GameDataManager.Instance.SetPlayer(_player);
+        }
     }
+    Character _player;
     void Init()
     {
         _tileMap.Init();
         GameManager.Instance.SetMap(_tileMap);
 
-        CreateCharacter("Player", "character01").BecomeViewer();
-        CreateCharacter("Monster", "character02");
-        //player.BecomeViewer();
+        _player = CreateCharacter("Player", "character01");
+        _player.BecomeViewer();
+        for (int i = 0; i < 10; i++)
+        {
+            CreateCharacter("Monster", "character02");
+        }
+        CreatePortal();
     }
     Character CreateCharacter(string fileName,string resourceName)
     {
@@ -54,6 +70,14 @@ public class MainGameScene : MonoBehaviour {
         Slider coolTimeGuage = GameUI.CreateCoolTimeSlider();
         character.LinkCoolTimeGuage(coolTimeGuage);
 
+        Text textLevel = GameUI.CreateLevelText();
+        character.LinkTextLevel(textLevel);
+        Text textEXP= GameUI.CreateEXPText();
+        character.LinkTextEXP(textEXP);
         return character;
+    }
+    void CreatePortal()
+    {
+        //Portal portal = new 
     }
 }

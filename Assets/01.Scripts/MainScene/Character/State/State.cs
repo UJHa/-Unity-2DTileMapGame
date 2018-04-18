@@ -10,6 +10,9 @@ public enum eStateType
     ATTACK,
     DAMAGE,
     DEATH,
+    PATHFINDING,
+    BUILD_PATH,
+    BATTLE,
 }
 public class State
 {
@@ -31,13 +34,14 @@ public class State
     }
     virtual public void Update()
     {
-        if (eStateType.NONE != _nextState)
-        {
-            _character.ChangeState(_nextState);
-        }
+        //if (eStateType.NONE != _nextState)
+        //{
+        //    _character.ChangeState(_nextState);
+        //}
     }
     public void NextState(eStateType nextState)
     {
         _nextState = nextState;
     }
+    public eStateType GetNextState() { return _nextState; }
 }

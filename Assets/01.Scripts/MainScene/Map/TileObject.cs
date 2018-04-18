@@ -17,19 +17,10 @@ public class TileObject : MapObject
 		
 	}
     //Init
-    public void Init(Sprite sprite)
+    public void Init(Sprite sprite, int tileX, int tileY)
     {
         gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
+        _tileX = tileX;
+        _tileY = tileY;
     }
-    //public void SetPosition(Vector2 position)
-    //{
-    //    gameObject.transform.localPosition = position;
-    //}
-
-    ////Sorting
-    //public void SetSortingOrder(int sortingID, int sortingOrder)
-    //{
-    //    gameObject.GetComponent<SpriteRenderer>().sortingLayerID = sortingID;
-    //    gameObject.GetComponent<SpriteRenderer>().sortingOrder= sortingOrder;
-    //}
 }

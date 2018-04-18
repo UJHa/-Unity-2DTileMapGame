@@ -9,6 +9,8 @@ public enum eMapObjectType
 }
 public class MapObject : MonoBehaviour {
 
+    protected int _tileX;
+    protected int _tileY;
     // Use this for initialization
     void Start () {
 		
@@ -71,4 +73,6 @@ public class MapObject : MonoBehaviour {
         //        break;
         //}
     }
+    public int GetTileX() { return _tileX; }
+    public int GetTileY() { return _tileY; }
 }

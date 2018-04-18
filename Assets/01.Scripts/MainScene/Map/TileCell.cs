@@ -27,13 +27,23 @@ public class TileCell
         _position.x = x;
         _position.y = y;
     }
+    //tile position
+    private int _tileX;
+    private int _tileY;
+
+    public void SetTilePosition(int tileX, int tileY)
+    {
+        _tileX = tileX;
+        _tileY = tileY;
+    }
+    public int GetTileX() { return _tileX; }
+    public int GetTileY() { return _tileY; }
 
     public void AddObject(eTileLayer layer, MapObject mapObject)
     {
         List<MapObject> mapObjectList = _mapObjectMap[(int)layer];
 
         int sortingOrder = mapObjectList.Count;
-        //mapObject.SetSortingOrder(sortingID, sortingOrder);
         mapObject.SetSortingOrder(layer, sortingOrder);
         mapObject.SetPosition(_position);
 
@@ -72,5 +82,68 @@ public class TileCell
             }
         }
         return collisionList;
+    }
+    public List<MapObject> GetMapObjectList(eTileLayer layer)
+    {
+        if (0 == _mapObjectMap[(int)layer].Count)
+            return null;
+        return _mapObjectMap[(int)layer];
+    }
+    //visit
+    public void ResetPathFinding()
+    {
+        SetVisit(false);
+        _prevTileCell = null;
+    }
+    private bool _isVisit;
+    public void SetVisit(bool isVisited)
+    {
+        _isVisit = isVisited;
+    }
+    public bool IsVisited() { return _isVisit; }
+
+    public bool IsPathfindable()
+    {
+        for (int layer = 0; layer < (int)eTileLayer.MAXCOUNT; layer++)
+        {
+            List<MapObject> objectList = _mapObjectMap[layer];
+            for (int i = 0; i < objectList.Count; i++)
+            {
+                //if( eMapObjectType.MONSTER != objectList[i].GetObjectType() &&
+                if  (eMapObjectType.MONSTER != objectList[i].GetObjectType() &&
+                    false == objectList[i].CanMove())
+                    return false;
+            }
+        }
+        return true;
+    }
+
+    public void Draw(Color color)
+    {
+        List<MapObject> objectList = _mapObjectMap[(int)eTileLayer.GROUND];
+        objectList[0].GetComponent<SpriteRenderer>().color = color;
+    }
+    private float _distanceStart = 0.0f;
+    private float _distanceWeight = 1.0f;
+    public float GetDistanceFromStart()
+    {
+        return _distanceStart;
+    }
+    public float GetDistanceFromWeight()
+    {
+        return _distanceWeight;
+    }
+    public void SetDistanceFromStart(float distance)
+    {
+        _distanceStart = distance;
+    }
+    private TileCell _prevTileCell;
+    public void SetPrevTileCell(TileCell prevTileCell)
+    {
+        _prevTileCell = prevTileCell;
+    }
+    public TileCell GetPrevTileCell()
+    {
+        return _prevTileCell;
     }
 }

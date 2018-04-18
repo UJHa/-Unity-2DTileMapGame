@@ -7,6 +7,7 @@ public class AttackState : State
     override public void Start()
     {
         base.Start();
+
         int moveX = _character.GetTileX();
         int moveY = _character.GetTileY();
         switch (_character.GetNextDirection())
@@ -19,13 +20,16 @@ public class AttackState : State
 
         TileMap map = GameManager.Instance.GetMap();
         List<MapObject> collisionList = map.GetCollisionList(moveX, moveY);
-        for (int i = 0; i < collisionList.Count; i++)
+        if(null != collisionList && 0 == collisionList.Count)
         {
-            switch (collisionList[i].GetObjectType())
+            for (int i = 0; i < collisionList.Count; i++)
             {
-                case eMapObjectType.MONSTER:
-                    _character.Attack(collisionList[i]);
-                    break;
+                switch (collisionList[i].GetObjectType())
+                {
+                    case eMapObjectType.MONSTER:
+                        _character.Attack(collisionList[i]);
+                        break;
+                }
             }
         }
         _character.SetNextDirection(eMoveDirection.NONE);

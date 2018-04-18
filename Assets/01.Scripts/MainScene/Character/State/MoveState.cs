@@ -12,6 +12,7 @@ public class MoveState : State
     override public void Start()
     {
         base.Start();
+
         int moveX = _character.GetTileX();
         int moveY = _character.GetTileY();
         switch (_character.GetNextDirection())

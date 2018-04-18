@@ -6,7 +6,7 @@ public class DamageState : State
 {
 	override public void Start () {
         base.Start();
-
+        
         int damagePoint = _character.GetDamagePoint();
         _character.DecreaseHP(damagePoint);
         if(false == _character.IsLive())
@@ -15,7 +15,7 @@ public class DamageState : State
         }
         else
         {
-            _nextState = eStateType.IDLE;
+            _nextState = eStateType.BATTLE;
         }
     }
 }
