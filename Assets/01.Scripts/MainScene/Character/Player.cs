@@ -13,7 +13,8 @@ public class Player : Character
     {
         base.InitState();
         {
-            State state = new PathFindingIdle();
+            //State state = new PathFindingIdle();
+            State state = new PlayerIdle();
             state.Init(this);
             _stateMap[eStateType.IDLE] = state;
         }
