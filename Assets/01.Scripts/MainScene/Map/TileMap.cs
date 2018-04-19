@@ -53,8 +53,8 @@ public class TileMap : MonoBehaviour
 
     virtual public void CreateMap()
     {
-        //CreateTiles();
-        CreateRandomMaze();
+        CreateTiles();
+        //CreateRandomMaze();
     }
 
     void CreateTiles()

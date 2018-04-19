@@ -19,6 +19,11 @@ public class Character : MapObject
     public int GetHP() { return _hp; }
     protected bool _isLive = true;
     protected int _attackPoint = 10;
+    protected int _moveRange = 3;
+    public int GetMoveRange()
+    {
+        return _moveRange;
+    }
     // Use this for initialization
     void Start()
     {

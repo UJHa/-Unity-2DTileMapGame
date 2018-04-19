@@ -139,34 +139,6 @@ public class PathFindingState : State
                                 }
                             }
                         }
-                        //else //canMove false 일때
-                        //{
-                        //    if(_character.GetTargetTileCell()==nextTileCell)
-                        //    {
-                        //        nextTileCell.SetDistanceFromStart(distanceFromStart);
-                        //        nextTileCell.SetPrevTileCell(command.tileCell);
-
-                        //        sPathCommand nextCommand;
-                        //        nextCommand.tileCell = nextTileCell;
-                        //        nextCommand.heuristic = heuristic;
-                        //        PushPathfindingQueue(nextCommand);
-                        //    }
-                        //    //List<MapObject> collisionList = _character.GetTargetTileCell().GetCollisionList();
-                        //    //for (int i = 0; i < collisionList.Count; i++)
-                        //    //{
-                        //    //    if (eMapObjectType.MONSTER == collisionList[i].GetObjectType())
-                        //    //    {
-                        //    //        nextTileCell.SetDistanceFromStart(distanceFromStart);
-                        //    //        nextTileCell.SetPrevTileCell(command.tileCell);
-
-                        //    //        sPathCommand nextCommand;
-                        //    //        nextCommand.tileCell = nextTileCell;
-                        //    //        nextCommand.heuristic = heuristic;
-                        //    //        PushPathfindingQueue(nextCommand);
-                        //    //        break;
-                        //    //    }
-                        //    //}
-                        //}
                     }
                 }
             }
