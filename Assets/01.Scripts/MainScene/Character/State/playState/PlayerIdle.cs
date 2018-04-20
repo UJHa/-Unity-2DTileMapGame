@@ -13,16 +13,9 @@ public class PlayerIdle : State
     override public void Start()
     {
         base.Start();
+
         TileMap map = GameManager.Instance.GetMap();
-        if (null != _character.GetTargetTileCell())
-        {
-            map.ResetVisit();
-        }
-        else
-        {
-            _nextState = eStateType.IDLE;
-        }
-        //첫 큐에 넣는 출발 셀 넣기
+        
         TileCell startTileCell = map.GetTileCell(_character.GetTileX(), _character.GetTileY());
         startTileCell.SetPrevTileCell(null);
         sPathCommand startCmd;
@@ -32,9 +25,7 @@ public class PlayerIdle : State
 
         while (0 != _pathfindingQueue.Count)
         {
-            //Debug.Log(_pathfindingQueue.Count);
             sPathCommand command = _pathfindingQueue[0];
-            //Debug.Log(command.tileCell.GetDistanceFromStart());
             _pathfindingQueue.RemoveAt(0);
             //가져온 커맨드의 현재 타일셀 방문 표시
             if (false == command.tileCell.IsVisited())
@@ -43,7 +34,6 @@ public class PlayerIdle : State
                     return;
                 command.tileCell.SetVisit(true);
                 command.tileCell.Draw(Color.blue);
-                //Debug.Log(command.tileCell.GetDistanceFromStart());
 
                 int tileX = command.tileCell.GetTileX();
                 int tileY = command.tileCell.GetTileY();
@@ -65,7 +55,7 @@ public class PlayerIdle : State
                         float distanceFromStart = command.tileCell.GetDistanceFromStart() + nextTileCell.GetDistanceFromWeight();
                         float heuristic = distanceFromStart;
 
-                        if (null == nextTileCell.GetPrevTileCell())
+                        if (null == nextTileCell.GetPrevTileCell() || distanceFromStart < nextTileCell.GetDistanceFromStart())
                         {
                             nextTileCell.SetDistanceFromStart(distanceFromStart);
                             nextTileCell.SetPrevTileCell(command.tileCell);
@@ -74,18 +64,6 @@ public class PlayerIdle : State
                             nextCommand.tileCell = nextTileCell;
                             nextCommand.heuristic = heuristic;
                             _pathfindingQueue.Add(nextCommand);
-                        }
-                        else if (distanceFromStart < nextTileCell.GetDistanceFromStart())
-                        {
-                            {
-                                nextTileCell.SetDistanceFromStart(distanceFromStart);
-                                nextTileCell.SetPrevTileCell(command.tileCell);
-
-                                sPathCommand nextCommand;
-                                nextCommand.tileCell = nextTileCell;
-                                nextCommand.heuristic = heuristic;
-                                _pathfindingQueue.Add(nextCommand);
-                            }
                         }
                     }
                 }
