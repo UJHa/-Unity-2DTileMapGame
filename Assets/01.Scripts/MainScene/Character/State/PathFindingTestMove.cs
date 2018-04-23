@@ -23,7 +23,7 @@ public class PathFindingTestMove : State
     }
     private void UpdateMove()
     {
-        if(false == _character.IsEmptyPathfindingTileCell())
+        if(!_character.IsEmptyPathfindingTileCell())
         {
             TileCell nextTileCell = _character.PopPathTileCell();
 

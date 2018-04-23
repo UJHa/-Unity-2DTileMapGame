@@ -93,6 +93,7 @@ public class TileCell
     public void ResetPathFinding()
     {
         SetVisit(false);
+        _distanceStart = 0.0f;
         _prevTileCell = null;
     }
     private bool _isVisit;
