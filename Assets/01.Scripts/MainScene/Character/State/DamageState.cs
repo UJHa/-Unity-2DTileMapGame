@@ -15,7 +15,7 @@ public class DamageState : State
         }
         else
         {
-            _nextState = eStateType.BATTLE;
+            _nextState = eStateType.IDLE;
         }
     }
 }

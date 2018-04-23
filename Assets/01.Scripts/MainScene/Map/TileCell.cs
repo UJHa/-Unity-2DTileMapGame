@@ -110,7 +110,6 @@ public class TileCell
             List<MapObject> objectList = _mapObjectMap[layer];
             for (int i = 0; i < objectList.Count; i++)
             {
-                //if( eMapObjectType.MONSTER != objectList[i].GetObjectType() &&
                 if  (eMapObjectType.MONSTER != objectList[i].GetObjectType() &&
                     false == objectList[i].CanMove())
                     return false;

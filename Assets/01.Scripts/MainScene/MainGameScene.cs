@@ -13,7 +13,6 @@ public class MainGameScene : MonoBehaviour {
 
     public MainGameUI GameUI;
     public TileMap _tileMap;
-    //public Player _testPlayer;
 	// Use this for initialization
 	void Start ()
     {
@@ -42,7 +41,6 @@ public class MainGameScene : MonoBehaviour {
         {
             CreateCharacter("Monster", "character02");
         }
-        CreatePortal();
     }
     Character CreateCharacter(string fileName,string resourceName)
     {
@@ -56,9 +54,11 @@ public class MainGameScene : MonoBehaviour {
         switch (fileName)
         {
             case "Player":
+                charGameObject.name = "Player";
                 character = charGameObject.AddComponent<Player>();
                 break;
             case "Monster":
+                charGameObject.name = "Monster";
                 character = charGameObject.AddComponent<Monster>();
                 break;
         }
@@ -68,16 +68,10 @@ public class MainGameScene : MonoBehaviour {
         character.LinkHPGuage(hpGuage);
 
         Slider coolTimeGuage = GameUI.CreateCoolTimeSlider();
-        character.LinkCoolTimeGuage(coolTimeGuage);
+        character.LinkActionCoolTimeGuage(coolTimeGuage);
 
         Text textLevel = GameUI.CreateLevelText();
         character.LinkTextLevel(textLevel);
-        Text textEXP= GameUI.CreateEXPText();
-        character.LinkTextEXP(textEXP);
         return character;
-    }
-    void CreatePortal()
-    {
-        //Portal portal = new 
     }
 }

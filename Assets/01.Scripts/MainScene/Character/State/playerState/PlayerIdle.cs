@@ -14,13 +14,19 @@ public class PlayerIdle : State
     override public void Start()
     {
         base.Start();
-        Debug.Log("idle start!");
-        DrawMoveRange();
-        Debug.Log(_movePossibleTileCellList.Count);
+        _character.ResetActionCooltime();
     }
     override public void Update()
     {
         base.Update();
+        if (_character.IsActionPossible())
+        {
+            DrawMoveRange();
+        }
+        else
+        {
+            return;
+        }
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -42,11 +48,9 @@ public class PlayerIdle : State
                 {
                     _character.ShowMoveCursor(hit.transform.GetComponent<MapObject>().transform.position);
                     if (_movePossibleTileCellList.Contains(target))
-                    //if (target.IsPathfindable())
                     {
                         _character.SetTargetTileCell(target);
-                        Debug.Log("이동가능 타일!");
-                        _nextState = eStateType.BUILD_PATH;
+                        _nextState = eStateType.MOVE;
                     }
                 }
             }
@@ -61,61 +65,6 @@ public class PlayerIdle : State
 
         _moveRangeQueue.Clear();
         _movePossibleTileCellList.Clear();
-    }
-    void UpdateInput()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                int targetTileX = hit.transform.GetComponent<MapObject>().GetTileX();
-                int targetTileY = hit.transform.GetComponent<MapObject>().GetTileY();
-
-                TileCell target = GameManager.Instance.GetMap().GetTileCell(targetTileX, targetTileY);
-                if (!(_character.GetTileX() == targetTileX && _character.GetTileY() == targetTileY))    //player위치 제외한 타일셀 클릭 시
-                {
-                    _character.ShowMoveCursor(hit.transform.GetComponent<MapObject>().transform.position);
-                    if (_movePossibleTileCellList.Contains(target))
-                    //if (target.IsPathfindable())
-                    {
-                        _character.SetTargetTileCell(target);
-                        Debug.Log("이동가능 타일!");
-                        _nextState = eStateType.PATHFINDING;
-                    }
-                }
-            }
-        }
-    }
-    sPosition GetPositionByDirection(sPosition curPosition, int direction)
-    {
-        sPosition position = curPosition;
-        eMoveDirection moveDirection = (eMoveDirection)direction;
-        switch (moveDirection)
-        {
-            case eMoveDirection.LEFT:
-                position.x--;
-                if (position.x < 0)
-                    position.x++;
-                break;
-            case eMoveDirection.RIGHT:
-                position.x++;
-                if (position.x == GameManager.Instance.GetMap().GetWidth())
-                    position.x--;
-                break;
-            case eMoveDirection.UP:
-                position.y--;
-                if (position.y < 0)
-                    position.y++;
-                break;
-            case eMoveDirection.DOWN:
-                position.y++;
-                if (position.y == GameManager.Instance.GetMap().GetHeight())
-                    position.y--;
-                break;
-        }
-        return position;
     }
     void DrawMoveRange()
     {
@@ -145,20 +94,15 @@ public class PlayerIdle : State
                 command.tileCell.Draw(Color.blue);
                 _movePossibleTileCellList.Add(command.tileCell);
 
-                int tileX = command.tileCell.GetTileX();
-                int tileY = command.tileCell.GetTileY();
                 //4방향 next타일들 검사
                 for (int direction = (int)eMoveDirection.LEFT; direction < (int)eMoveDirection.DOWN + 1; direction++)
                 {
                     sPosition curPosition;
                     curPosition.x = command.tileCell.GetTileX();
                     curPosition.y = command.tileCell.GetTileY();
-                    sPosition nextPosition = GetPositionByDirection(curPosition, direction);
+                    sPosition nextPosition = _character.GetPositionByDirection(curPosition, direction);
 
                     TileCell nextTileCell = map.GetTileCell(nextPosition.x, nextPosition.y);
-                    tileX = command.tileCell.GetTileX();
-                    tileY = command.tileCell.GetTileY();
-
                     // nextTileCell 방문 안했고, 움직일수 있는 타일일때
                     if (null != nextTileCell && true == nextTileCell.IsPathfindable() && false == nextTileCell.IsVisited())
                     {
@@ -177,11 +121,7 @@ public class PlayerIdle : State
                             sTileHeuristicInfo nextCommand;
                             nextCommand.tileCell = nextTileCell;
                             nextCommand.heuristic = heuristic;
-                            _moveRangeQueue.Add(nextCommand);
-                            _moveRangeQueue.Sort(delegate (sTileHeuristicInfo cmd, sTileHeuristicInfo nextCmd)
-                            {
-                                return cmd.heuristic.CompareTo(nextCmd.heuristic);
-                            });
+                            PushSortmoveRangeQueue(nextCommand);
                         }
                     }
                 }
@@ -201,7 +141,15 @@ public class PlayerIdle : State
             pathTileCell = pathTileCell.GetPrevTileCell();
         }
     }
-    private float CalcComplexHeuristic(TileCell nextTileCell, TileCell targetTileCell)
+    void PushSortmoveRangeQueue(sTileHeuristicInfo command)
+    {
+        _moveRangeQueue.Add(command);
+        _moveRangeQueue.Sort(delegate (sTileHeuristicInfo cmd, sTileHeuristicInfo nextCmd)
+        {
+            return cmd.heuristic.CompareTo(nextCmd.heuristic);
+        });
+    }
+    float CalcComplexHeuristic(TileCell nextTileCell, TileCell targetTileCell)
     {
         int distanceW = nextTileCell.GetTileX() - targetTileCell.GetTileX();
         int distanceH = nextTileCell.GetTileY() - targetTileCell.GetTileY();
@@ -210,7 +158,7 @@ public class PlayerIdle : State
         float distance = distanceW + distanceH;
         return distance;
     }
-    protected float CalcAStarHeuristic(float distanceFromStart, TileCell nextTileCell, TileCell targetTileCell)
+    float CalcAStarHeuristic(float distanceFromStart, TileCell nextTileCell, TileCell targetTileCell)
     {
         return distanceFromStart + CalcComplexHeuristic(nextTileCell, targetTileCell);
     }

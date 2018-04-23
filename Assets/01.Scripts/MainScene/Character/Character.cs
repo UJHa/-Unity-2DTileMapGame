@@ -45,10 +45,10 @@ public class Character : MapObject
     }
     void UpdateCoolTime()
     {
-        if (_attackCoolTime <= _deltaAttackCoolTime)
-            _deltaAttackCoolTime = _attackCoolTime;
+        if (_actionCoolTime <= _deltaActionCoolTime)
+            _deltaActionCoolTime = _actionCoolTime;
         else
-            _deltaAttackCoolTime += Time.deltaTime;
+            _deltaActionCoolTime += Time.deltaTime;
 
         if (_moveCoolTime <= _deltaMoveCoolTime)
             _deltaMoveCoolTime = _moveCoolTime;
@@ -60,7 +60,7 @@ public class Character : MapObject
         if (null == _hpGuage || null == _coolTimeGuage)
             return;
         _hpGuage.value = _hp / 100.0f;
-        _coolTimeGuage.value = _deltaAttackCoolTime / _attackCoolTime;
+        _coolTimeGuage.value = _deltaActionCoolTime / _actionCoolTime;
     }
     public void Init(string viewName)
     {
@@ -220,7 +220,7 @@ public class Character : MapObject
     }
     public void Attack(MapObject enemy)
     {
-        ResetAttackCooltime();
+        //ResetAttackCooltime();
         MessageParam msgParam = new MessageParam();
         msgParam.sender = this;
         msgParam.receiver = enemy;
@@ -299,23 +299,23 @@ public class Character : MapObject
             _level++;
             _textLevel.text = "level "+ _level;
         }
-        _textExp.text = "exp " + _myExp;
+        //_textExp.text = "exp " + _myExp;
     }
 
     //coolTime
-    protected float _attackCoolTime = 1.5f;
-    float _deltaAttackCoolTime = 0.0f;
-    public bool IsAttackPossible()
+    protected float _actionCoolTime = 1.0f;
+    float _deltaActionCoolTime = 0.0f;
+    public bool IsActionPossible()
     {
-        if (_attackCoolTime <= _deltaAttackCoolTime)
+        if (_actionCoolTime <= _deltaActionCoolTime)
         {
             return true;
         }
         return false;
     }
-    void ResetAttackCooltime()
+    public void ResetActionCooltime()
     {
-        _deltaAttackCoolTime = 0.0f;
+        _deltaActionCoolTime = 0.0f;
     }
 
     protected float _moveCoolTime = 0.3f;
@@ -341,30 +341,6 @@ public class Character : MapObject
     }
     public TileCell GetTargetTileCell() { return _targetTileCell; }
 
-    private Stack<TileCell> _pathfindingStack = new Stack<TileCell>();
-    public void PushPathTileCell(TileCell tileCell)
-    {
-        if (null != tileCell) 
-            _pathfindingStack.Push(tileCell);
-    }
-    public TileCell PopPathTileCell()
-    {
-        if(_pathfindingStack.Count>0)
-            return _pathfindingStack.Pop();
-        return null;
-    }
-    public bool IsEmptyPathfindingTileCell()
-    {
-        if (_pathfindingStack.Count > 0)
-            return false;
-        return true;
-    }
-    public void ClearPathfindingTileCell()
-    {
-        _pathfindingStack.Clear();
-    }
-    public Stack<TileCell> GetPathFindingStack() { return _pathfindingStack; }
-
     // UI
     Slider _hpGuage = null;
     public void LinkHPGuage(Slider hpGuage)
@@ -378,7 +354,7 @@ public class Character : MapObject
         _hpGuage.value = _hp / 100.0f;
     }
     Slider _coolTimeGuage = null;
-    public void LinkCoolTimeGuage(Slider coolTimeGuage)
+    public void LinkActionCoolTimeGuage(Slider coolTimeGuage)
     {
         GameObject canvasObject = transform.Find("Canvas").gameObject;
         coolTimeGuage.transform.SetParent(canvasObject.transform);
@@ -386,7 +362,7 @@ public class Character : MapObject
         coolTimeGuage.transform.localScale = Vector3.one;
 
         _coolTimeGuage = coolTimeGuage;
-        _coolTimeGuage.value = _deltaAttackCoolTime / _attackCoolTime;
+        _coolTimeGuage.value = _deltaActionCoolTime / _actionCoolTime;
     }
     Text _textLevel = null;
     public void LinkTextLevel(Text text)
@@ -397,16 +373,6 @@ public class Character : MapObject
         text.transform.localScale = Vector3.one;
 
         _textLevel = text;
-    }
-    Text _textExp = null;
-    public void LinkTextEXP(Text text)
-    {
-        GameObject canvasObject = transform.Find("Canvas").gameObject;
-        text.transform.SetParent(canvasObject.transform);
-        text.transform.localPosition = new Vector3(0.0f, -0.8f, 0.0f);
-        text.transform.localScale = Vector3.one;
-
-        _textExp = text;
     }
 
     public void ShowMoveCursor(Vector3 vector3)
@@ -425,5 +391,34 @@ public class Character : MapObject
         if (toPosition.y < curPosition.y) return eMoveDirection.UP;
         if (toPosition.y > curPosition.y) return eMoveDirection.DOWN;
         return eMoveDirection.DOWN;
+    }
+    public sPosition GetPositionByDirection(sPosition curPosition, int direction)
+    {
+        sPosition position = curPosition;
+        eMoveDirection moveDirection = (eMoveDirection)direction;
+        switch (moveDirection)
+        {
+            case eMoveDirection.LEFT:
+                position.x--;
+                if (position.x < 0)
+                    position.x++;
+                break;
+            case eMoveDirection.RIGHT:
+                position.x++;
+                if (position.x == GameManager.Instance.GetMap().GetWidth())
+                    position.x--;
+                break;
+            case eMoveDirection.UP:
+                position.y--;
+                if (position.y < 0)
+                    position.y++;
+                break;
+            case eMoveDirection.DOWN:
+                position.y++;
+                if (position.y == GameManager.Instance.GetMap().GetHeight())
+                    position.y--;
+                break;
+        }
+        return position;
     }
 }

@@ -23,22 +23,9 @@ public class MoveState : State
             case eMoveDirection.DOWN: moveY++; break;
         }
 
-        if (false == _character.MoveStart(moveX, moveY))
-        {
-            if (_character.IsAttackPossible())
-            {
-                _nextState = eStateType.ATTACK;
-            }
-            else
-            {
-                _character.SetNextDirection(eMoveDirection.NONE);
-                _nextState = eStateType.IDLE;
-            }
-        }
-        else
-        {
-            _character.SetNextDirection(eMoveDirection.NONE);
-            _nextState = eStateType.IDLE;
-        }
+        _character.MoveStart(moveX, moveY);
+
+        _character.SetNextDirection(eMoveDirection.NONE);
+        _nextState = eStateType.IDLE;
     }
 }

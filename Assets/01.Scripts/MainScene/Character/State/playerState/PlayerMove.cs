@@ -2,30 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PathFindingTestMove : State
+public class PlayerMove : State
 {
+    Stack<TileCell> _pathfindingStack = new Stack<TileCell>();
     override public void Start()
     {
         base.Start();
-    }
-    override public void Stop()
-    {
-        base.Stop();
-        _character.ClearPathfindingTileCell();
+        TileCell pathTileCell = _character.GetTargetTileCell();
+        while (null != pathTileCell.GetPrevTileCell())
+        {
+            _pathfindingStack.Push(pathTileCell);
+
+            pathTileCell = pathTileCell.GetPrevTileCell();
+        }
     }
     override public void Update()
     {
         base.Update();
-        if(_character.IsMovePossible())
+        if (_character.IsMovePossible())
         {
             UpdateMove();
         }
     }
-    private void UpdateMove()
+    void UpdateMove()
     {
-        if(!_character.IsEmptyPathfindingTileCell())
+        if (0 != _pathfindingStack.Count)
         {
-            TileCell nextTileCell = _character.PopPathTileCell();
+            TileCell nextTileCell = _pathfindingStack.Pop();
 
             sPosition curPosition;
             curPosition.x = _character.GetTileX();
@@ -37,14 +40,18 @@ public class PathFindingTestMove : State
 
             eMoveDirection direction = _character.GetDirection(curPosition, toPosition);
             _character.SetNextDirection(direction);
-            if (false == _character.MoveStart(nextTileCell.GetTileX(), nextTileCell.GetTileY()))
-            {
-                _nextState = eStateType.BATTLE;
-            }
+
+            _character.MoveStart(nextTileCell.GetTileX(), nextTileCell.GetTileY());
         }
         else
         {
             _nextState = eStateType.IDLE;
         }
+    }
+    public override void Stop()
+    {
+        base.Stop();
+        _character.SetTargetTileCell(null);
+        _pathfindingStack.Clear();
     }
 }
