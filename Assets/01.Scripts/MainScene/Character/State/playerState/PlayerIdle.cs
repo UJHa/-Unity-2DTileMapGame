@@ -14,7 +14,6 @@ public class PlayerIdle : State
     override public void Start()
     {
         base.Start();
-        _character.ResetActionCooltime();
     }
     override public void Update()
     {

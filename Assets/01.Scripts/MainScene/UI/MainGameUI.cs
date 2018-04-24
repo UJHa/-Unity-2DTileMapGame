@@ -5,7 +5,6 @@ using UnityEngine.UI;
 
 public class MainGameUI : MonoBehaviour
 {
-
     void Start()
     {
 
@@ -38,27 +37,20 @@ public class MainGameUI : MonoBehaviour
 
         return text;
     }
-    public GameObject expTextPrefabs;
-    public Text CreateEXPText()
+    public GameObject atkButtonPrefabs;
+    public Button CreateAtkButton()
     {
-        GameObject textObject = GameObject.Instantiate(expTextPrefabs);
-        Text text = textObject.GetComponent<Text>();
+        GameObject btnObject = GameObject.Instantiate(atkButtonPrefabs);
+        Button button = btnObject.GetComponent<Button>();
 
-        return text;
+        return button;
     }
-    public Button button;
-    //button action
-    public void OnAttack()
+    public GameObject waitButtonPrefabs;
+    public Button CreateWaitButton()
     {
-        Debug.Log("그만눌러!");
-        Character target = GameManager.Instance.targetCharacter;
+        GameObject btnObject = GameObject.Instantiate(waitButtonPrefabs);
+        Button button = btnObject.GetComponent<Button>();
 
-        MessageParam msgParam = new MessageParam();
-        msgParam.sender = null;
-        msgParam.receiver = target;
-        msgParam.attackPoint = 100;
-        msgParam.message = "Attack";
-
-        MessageSystem.Instance.Send(msgParam);
+        return button;
     }
 }

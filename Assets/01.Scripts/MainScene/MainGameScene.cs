@@ -72,6 +72,12 @@ public class MainGameScene : MonoBehaviour {
 
         Text textLevel = GameUI.CreateLevelText();
         character.LinkTextLevel(textLevel);
+
+        Button atkButton = GameUI.CreateAtkButton();
+        character.LinkAtkButton(atkButton);
+
+        Button waitButton = GameUI.CreateWaitButton();
+        character.LinkWaitButton(waitButton);
         return character;
     }
 }

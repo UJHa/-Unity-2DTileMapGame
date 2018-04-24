@@ -6,10 +6,10 @@
 - playerIdle에서 이동 가능 타일 클릭 시 이동(0423완료)
 - 각 캐릭터 행동에 대한 actionCooltime 적용(0423완료)
 - player idle, move state 생성(0423완료)
-- 이동 후 (공격, 대기) 선택UI 생성
-  - select state 생성
+- 이동 후 (공격, 대기) 선택UI 생성(0424완료)
+  - select state 생성(0424완료)
   - collider 컴포넌트 가진 탄의 GameObject 생성
-  - 공격, 대기 sprite 리소스 가져오기
+  - 공격, 대기 sprite 리소스 가져오기(0424완료)
 - attack state 생성
   - 공격 방법
     - 캐릭터를 시작점으로 지정한 방향으로 날아가는 탄 발사

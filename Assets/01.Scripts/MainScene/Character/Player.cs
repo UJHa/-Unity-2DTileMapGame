@@ -23,6 +23,11 @@ public class Player : Character
             state.Init(this);
             _stateMap[eStateType.MOVE] = state;
         }
+        {
+            State state = new PlayerSelect();
+            state.Init(this);
+            _stateMap[eStateType.SELECT] = state;
+        }
         _state = _stateMap[eStateType.IDLE];
         _state.Start();
     }

@@ -375,6 +375,64 @@ public class Character : MapObject
         _textLevel = text;
     }
 
+    Button _atkButton = null;
+    public void LinkAtkButton(Button button)
+    {
+        GameObject canvasObject = transform.Find("Canvas").gameObject;
+        button.transform.SetParent(canvasObject.transform);
+        button.transform.localPosition = new Vector3(-1.6f, -2.0f, 0.0f);
+        button.transform.localScale = Vector3.one;
+
+        _atkButton = button;
+        _atkButton.onClick.AddListener(IsAtkClick);
+    }
+
+    Button _waitButton = null;
+    public void LinkWaitButton(Button button)
+    {
+        GameObject canvasObject = transform.Find("Canvas").gameObject;
+        button.transform.SetParent(canvasObject.transform);
+        button.transform.localPosition = new Vector3(1.6f, -2.0f, 0.0f);
+        button.transform.localScale = Vector3.one;
+
+        _waitButton = button;
+        _waitButton.onClick.AddListener(IsWaitClick);
+    }
+    public void SetSelectUI(bool isActive)
+    {
+        _atkButton.gameObject.SetActive(isActive);
+        _waitButton.gameObject.SetActive(isActive);
+    }
+    bool _atkClicked = false;
+    bool _waitClicked = false;
+    public bool IsClickAtkButton()
+    {
+        if (_atkClicked)
+        {
+            _atkClicked = false;
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsClickWaitButton()
+    {
+        if (_waitClicked)
+        {
+            _waitClicked = false;
+            return true;
+        }
+        return false;
+    }
+    void IsAtkClick()
+    {
+        _atkClicked = true;
+    }
+    void IsWaitClick()
+    {
+        _waitClicked = true;
+    }
+
     public void ShowMoveCursor(Vector3 vector3)
     {
         string filePath = "Prefabs/Effects/DamageEffect";

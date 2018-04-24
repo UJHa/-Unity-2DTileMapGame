@@ -7,11 +7,10 @@ public enum eStateType
     NONE,
     IDLE,
     MOVE,
+    SELECT,
     ATTACK,
     DAMAGE,
     DEATH,
-    PATHFINDING,
-    BUILD_PATH,
 }
 public class State
 {

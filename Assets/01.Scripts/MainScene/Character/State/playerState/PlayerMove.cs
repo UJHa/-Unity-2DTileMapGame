@@ -45,7 +45,7 @@ public class PlayerMove : State
         }
         else
         {
-            _nextState = eStateType.IDLE;
+            _nextState = eStateType.SELECT;
         }
     }
     public override void Stop()
