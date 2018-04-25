@@ -398,6 +398,12 @@ public class Character : MapObject
         _waitButton = button;
         _waitButton.onClick.AddListener(IsWaitClick);
     }
+    public void SetCanvasLayer(eTileLayer layer)
+    {
+        GameObject canvasObject = transform.Find("Canvas").gameObject;
+        int sortingID = SortingLayer.NameToID(layer.ToString());
+        canvasObject.GetComponent<Canvas>().sortingLayerID = sortingID;
+    }
     public void SetSelectUI(bool isActive)
     {
         _atkButton.gameObject.SetActive(isActive);
@@ -478,5 +484,9 @@ public class Character : MapObject
                 break;
         }
         return position;
+    }
+    public Transform GetTransform()
+    {
+        return gameObject.transform;
     }
 }

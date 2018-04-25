@@ -378,7 +378,7 @@ MonoBehaviour:
     type: 2}
   levelTextPrefabs: {fileID: 1323093737090538, guid: 8b7583dbd8a5ce54188420720d11b0cf,
     type: 2}
-  atkButtonPrefabs: {fileID: 1375970510567994, guid: a29cd44db9af9eb44956f4c3b7ac492e,
+  atkButtonPrefabs: {fileID: 1042220233533032, guid: 4443ea89ca3a83944b70d71f1155dfdc,
     type: 2}
   waitButtonPrefabs: {fileID: 1042220233533032, guid: 8b2226a092d3ffa44bb0f3e7885758c4,
     type: 2}

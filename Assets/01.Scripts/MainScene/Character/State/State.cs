@@ -32,10 +32,7 @@ public class State
     }
     virtual public void Update()
     {
-        //if (eStateType.NONE != _nextState)
-        //{
-        //    _character.ChangeState(_nextState);
-        //}
+
     }
     public void NextState(eStateType nextState)
     {

@@ -28,6 +28,11 @@ public class Player : Character
             state.Init(this);
             _stateMap[eStateType.SELECT] = state;
         }
+        {
+            State state = new PlayerAttack();
+            state.Init(this);
+            _stateMap[eStateType.ATTACK] = state;
+        }
         _state = _stateMap[eStateType.IDLE];
         _state.Start();
     }

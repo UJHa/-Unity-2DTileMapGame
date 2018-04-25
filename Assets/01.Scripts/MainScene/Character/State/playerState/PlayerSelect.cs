@@ -16,7 +16,7 @@ public class PlayerSelect : State
 
         if(_character.IsClickAtkButton())
         {
-            _nextState = eStateType.IDLE;
+            _nextState = eStateType.ATTACK;
             return;
         }
         if(_character.IsClickWaitButton())
