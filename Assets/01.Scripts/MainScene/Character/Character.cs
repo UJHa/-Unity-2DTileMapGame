@@ -317,6 +317,10 @@ public class Character : MapObject
     {
         _deltaActionCoolTime = 0.0f;
     }
+    public void SetActionCooltime(float second)
+    {
+        _actionCoolTime = second;
+    }
 
     protected float _moveCoolTime = 0.3f;
     float _deltaMoveCoolTime = 0.0f;
@@ -488,5 +492,14 @@ public class Character : MapObject
     public Transform GetTransform()
     {
         return gameObject.transform;
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(gameObject.name!=collision.gameObject.GetComponent<Bullet>().GetShooterName())
+        {
+            Debug.Log("충돌");
+            Destroy(collision.gameObject);
+            _hp -= 10;
+        }
     }
 }

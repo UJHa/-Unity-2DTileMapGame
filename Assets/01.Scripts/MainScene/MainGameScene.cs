@@ -50,6 +50,9 @@ public class MainGameScene : MonoBehaviour {
         GameObject charGameObject = GameObject.Instantiate(charPrefabs);
         charGameObject.transform.SetParent(_tileMap.transform);
         charGameObject.transform.localPosition = Vector3.zero;
+        charGameObject.AddComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+        charGameObject.AddComponent<CircleCollider2D>().radius = 0.1f;
+        charGameObject.GetComponent<CircleCollider2D>().isTrigger = true;
         Character character = charGameObject.GetComponent<Player>();
         switch (fileName)
         {

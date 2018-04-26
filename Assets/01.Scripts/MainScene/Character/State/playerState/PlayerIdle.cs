@@ -18,6 +18,8 @@ public class PlayerIdle : State
     override public void Update()
     {
         base.Update();
+        if (Input.GetMouseButtonDown(0))
+            Debug.Log(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         if (_character.IsActionPossible())
         {
             DrawMoveRange();
