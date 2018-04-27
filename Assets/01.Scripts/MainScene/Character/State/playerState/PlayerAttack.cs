@@ -7,15 +7,22 @@ public class PlayerAttack : State
     override public void Start()
     {
         base.Start();
+        _character.GetDirectionUI().SetActive(true);
     }
     override public void Update()
     {
         base.Update();
+        Vector3 bulletDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _character.GetTransform().position;
+        bulletDirection.z = 0.0f;
+        bulletDirection.Normalize();
+
+        UpdateBulletDirectionUI(bulletDirection);
+
         if (Input.GetMouseButtonDown(0))
         {
-            Vector3 bulletDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _character.GetTransform().position;
-            bulletDirection.z = 0.0f;
-            bulletDirection.Normalize();
+            //Vector3 bulletDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _character.GetTransform().position;
+            //bulletDirection.z = 0.0f;
+            //bulletDirection.Normalize();
 
             // 탄 오브젝트 생성
             GameObject gameobject = Resources.Load<GameObject>("Prefabs/Bullet/DefaultBullet");
@@ -34,5 +41,20 @@ public class PlayerAttack : State
     }
     override public void Stop()
     {
+        _character.GetDirectionUI().SetActive(false);
+    }
+    void UpdateBulletDirectionUI(Vector3 direction)
+    {
+        Vector3 defaultVector = new Vector3(1.0f, 0.0f, 0.0f);
+        float dot = Vector3.Dot(defaultVector, direction);
+        float angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
+        if (direction.y < 0)
+        {
+            dot = Vector3.Dot(defaultVector, -direction);
+            angle = Mathf.Acos(dot) * Mathf.Rad2Deg;
+            angle -= 180.0f;
+        }
+        _character.GetDirectionUI().transform.localPosition = direction / 3.0f;
+        _character.GetDirectionUI().transform.eulerAngles = new Vector3(0.0f, 0.0f, angle);
     }
 }

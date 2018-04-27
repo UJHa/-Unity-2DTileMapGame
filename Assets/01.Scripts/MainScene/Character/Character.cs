@@ -62,6 +62,7 @@ public class Character : MapObject
         _hpGuage.value = _hp / 100.0f;
         _coolTimeGuage.value = _deltaActionCoolTime / _actionCoolTime;
     }
+    GameObject _bulletDirection;
     public void Init(string viewName)
     {
         //View를 붙인다.
@@ -71,6 +72,13 @@ public class Character : MapObject
         _characterView.transform.SetParent(transform);
         _characterView.transform.localPosition = Vector3.zero;
         _characterView.transform.localScale = GameManager.Instance.GetMap().GetLocalScale();
+
+        GameObject bulletDirectionPrefabs = Resources.Load<GameObject>("Prefabs/DirectionUI/BulletDirection");
+        _bulletDirection = GameObject.Instantiate(bulletDirectionPrefabs);
+        _bulletDirection.transform.SetParent(transform);
+        _bulletDirection.transform.localPosition = Vector3.zero;
+        _bulletDirection.transform.localScale = GameManager.Instance.GetMap().GetLocalScale();
+        _bulletDirection.SetActive(false);
 
         InitPosition();
         InitState();
@@ -495,11 +503,20 @@ public class Character : MapObject
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(gameObject.name!=collision.gameObject.GetComponent<Bullet>().GetShooterName())
+        Bullet bullet = collision.gameObject.GetComponent<Bullet>();
+        if(bullet!=null)
         {
-            Debug.Log("충돌");
-            Destroy(collision.gameObject);
-            _hp -= 10;
+            if (gameObject.name != bullet.GetShooterName())
+            {
+                Debug.Log("충돌");
+                Destroy(collision.gameObject);
+                _hp -= 10;
+            }
         }
+    }
+    //direction
+    public GameObject GetDirectionUI()
+    {
+        return _bulletDirection;
     }
 }

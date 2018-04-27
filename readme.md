@@ -23,6 +23,8 @@
 - selectUI character 앞 layer에 위치하도록 하기(0425완료)
 ===================================================
 2018-04-26 todoList 작성 시작
+- 탄막 발사 방향 UI 추가(0427완료)
+- 탄막 충돌 시 damamge 이펙트 띄우기(State없이)
 - 체력 0되면 deadState로 변경
 - Monster 탄 발사
 - charator idle 애니메이션 추가

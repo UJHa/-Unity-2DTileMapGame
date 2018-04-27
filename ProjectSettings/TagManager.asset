@@ -47,6 +47,6 @@ TagManager:
   - name: MIDDLE
     uniqueID: 2993786675
     locked: 0
-  - name: BULLET
+  - name: UI
     uniqueID: 788407733
     locked: 0
