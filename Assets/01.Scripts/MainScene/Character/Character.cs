@@ -33,10 +33,15 @@ public class Character : MapObject
     // Update is called once per frame
     void Update()
     {
-        if (eStateType.NONE != _state.GetNextState())
+        if (eStateType.NONE != _state.GetNextState() && _state.GetNextState() != _state.GetNowState())
         {
             ChangeState(_state.GetNextState());
         }
+        if(_hp <= 0)
+        {
+            _state.NextState(eStateType.DEATH);
+        }
+
 
         _state.Update();
         UpdateCoolTime();
@@ -181,7 +186,6 @@ public class Character : MapObject
             case "IsDead":
                 Debug.Log("I'm dead!");
                 Character msgSender = (Character)msgParam.sender;
-                Debug.Log(msgSender.GetEXP());
                 IncreaseEXP(msgSender.GetEXP());
                 break;
         }
@@ -311,7 +315,7 @@ public class Character : MapObject
     }
 
     //coolTime
-    protected float _actionCoolTime = 1.0f;
+    protected float _actionCoolTime = 3.0f;
     float _deltaActionCoolTime = 0.0f;
     public bool IsActionPossible()
     {
@@ -328,9 +332,10 @@ public class Character : MapObject
     public void SetActionCooltime(float second)
     {
         _actionCoolTime = second;
+        _deltaActionCoolTime = second;
     }
 
-    protected float _moveCoolTime = 0.3f;
+    protected float _moveCoolTime = 1.0f;
     float _deltaMoveCoolTime = 0.0f;
     public bool IsMovePossible()
     {
@@ -507,10 +512,9 @@ public class Character : MapObject
         if(bullet!=null)
         {
             if (gameObject.name != bullet.GetShooterName())
-            {
-                Debug.Log("충돌");
+            {   
                 Destroy(collision.gameObject);
-                _hp -= 10;
+                _hp -= 50;
             }
         }
     }

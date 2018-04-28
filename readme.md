@@ -25,7 +25,17 @@
 2018-04-26 todoList 작성 시작
 - 탄막 발사 방향 UI 추가(0427완료)
 - 탄막 충돌 시 damamge 이펙트 띄우기(State없이)
-- 체력 0되면 deadState로 변경
+- 체력 0되면 deadState로 변경(0428완료)
+- 탄 카메라 이동해도 따라가지 않게 하기
+- idle, playerIdle에서 캐릭터 movePossibleTiles 세팅을 1회만 하도록 변경
+  - SettingTilePath()함수 기능 분리
+    - 현재 이동 가능 타일배열을 세팅하는 기능, 각 tile들의 이전 경로를 저장시키는 기능이 합쳐져 있다.
 - Monster 탄 발사
-- charator idle 애니메이션 추가
+  - Monster 상태 구성
+    - idle : 행동 쿨타임 대기 후 이동 가능 타일 중 랜덤한 타겟 지정하여 moveState로 변경(0428완료)
+    - move : 정해진 타겟으로 moveCooltime에 맞춰 이동 / 이동 완료 후 공격(attack으로), 대기(idle로) 중 랜덤하게 상태 변경(0428완료)
+    - attack : 360도 탄 발사
+- damageState로 처리할지 character에서 처리할지 정할 것
+- 충돌 시 처리를 메세지 시스템을 사용할지 정하기
+- character idle 애니메이션 추가
 - moveCooltime 이동 보간

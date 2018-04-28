@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class PlayerIdle : State
 {
-    List<sTileHeuristicInfo> _moveRangeQueue = new List<sTileHeuristicInfo>();
-    List<TileCell> _movePossibleTileCellList = new List<TileCell>();
+    List<sTileHeuristicInfo> _tileInfoQueue = new List<sTileHeuristicInfo>();
+    List<TileCell> _movePossibleTiles = new List<TileCell>();
     protected struct sTileHeuristicInfo
     {
         public TileCell tileCell;
@@ -14,15 +14,15 @@ public class PlayerIdle : State
     override public void Start()
     {
         base.Start();
+        _character.ResetActionCooltime();
+        SettingMovePossibleTiles();
     }
     override public void Update()
     {
         base.Update();
-        if (Input.GetMouseButtonDown(0))
-            Debug.Log(Camera.main.ScreenToWorldPoint(Input.mousePosition));
         if (_character.IsActionPossible())
         {
-            DrawMoveRange();
+            DrawMovePath(null);
         }
         else
         {
@@ -37,10 +37,10 @@ public class PlayerIdle : State
             int targetTileY = hit.transform.GetComponent<MapObject>().GetTileY();
 
             TileCell target = GameManager.Instance.GetMap().GetTileCell(targetTileX, targetTileY);
-            if (_movePossibleTileCellList.Contains(target))
+            if (_movePossibleTiles.Contains(target))
             {
                 _character.SetTargetTileCell(target);
-                DrawMoveRange();
+                SettingTilePath();
                 DrawMovePath(target);
             }
             if (Input.GetMouseButtonDown(0))
@@ -48,7 +48,7 @@ public class PlayerIdle : State
                 if (!(_character.GetTileX() == targetTileX && _character.GetTileY() == targetTileY))    //player위치 제외한 타일셀 클릭 시
                 {
                     _character.ShowMoveCursor(hit.transform.GetComponent<MapObject>().transform.position);
-                    if (_movePossibleTileCellList.Contains(target))
+                    if (_movePossibleTiles.Contains(target))
                     {
                         _character.SetTargetTileCell(target);
                         _nextState = eStateType.MOVE;
@@ -59,15 +59,15 @@ public class PlayerIdle : State
     }
     override public void Stop()
     {
-        for (int i = 0; i < _movePossibleTileCellList.Count; i++)
+        for (int i = 0; i < _movePossibleTiles.Count; i++)
         {
-            _movePossibleTileCellList[i].Draw(Color.white);
+            _movePossibleTiles[i].Draw(Color.white);
         }
 
-        _moveRangeQueue.Clear();
-        _movePossibleTileCellList.Clear();
+        _tileInfoQueue.Clear();
+        _movePossibleTiles.Clear();
     }
-    void DrawMoveRange()
+    void SettingMovePossibleTiles()
     {
         TileMap map = GameManager.Instance.GetMap();
         map.ResetVisit();
@@ -77,23 +77,78 @@ public class PlayerIdle : State
         sTileHeuristicInfo startCmd;
         startCmd.tileCell = startTileCell;
         startCmd.heuristic = 0.0f;
-        _moveRangeQueue.Add(startCmd);
+        _tileInfoQueue.Add(startCmd);
 
-        while (0 != _moveRangeQueue.Count)
+        while (0 != _tileInfoQueue.Count)
         {
-            sTileHeuristicInfo command = _moveRangeQueue[0];
-            _moveRangeQueue.RemoveAt(0);
+            sTileHeuristicInfo command = _tileInfoQueue[0];
+            _tileInfoQueue.RemoveAt(0);
             //가져온 커맨드의 현재 타일셀 방문 표시
             if (false == command.tileCell.IsVisited())
             {
                 if (_character.GetMoveRange() == command.tileCell.GetDistanceFromStart())
                 {
-                    _moveRangeQueue.Clear();
+                    _tileInfoQueue.Clear();
                     return;
                 }
                 command.tileCell.SetVisit(true);
-                command.tileCell.Draw(Color.blue);
-                _movePossibleTileCellList.Add(command.tileCell);
+                _movePossibleTiles.Add(command.tileCell);
+
+                //4방향 next타일들 검사
+                for (int direction = (int)eMoveDirection.LEFT; direction < (int)eMoveDirection.DOWN + 1; direction++)
+                {
+                    sPosition curPosition;
+                    curPosition.x = command.tileCell.GetTileX();
+                    curPosition.y = command.tileCell.GetTileY();
+                    sPosition nextPosition = _character.GetPositionByDirection(curPosition, direction);
+
+                    TileCell nextTileCell = map.GetTileCell(nextPosition.x, nextPosition.y);
+                    // nextTileCell 방문 안했고, 움직일수 있는 타일일때
+                    if (null != nextTileCell && true == nextTileCell.IsPathfindable() && false == nextTileCell.IsVisited())
+                    {
+                        float distanceFromStart = command.tileCell.GetDistanceFromStart() + nextTileCell.GetDistanceFromWeight();
+                        float heuristic = distanceFromStart;
+
+                        if (null == nextTileCell.GetPrevTileCell() || distanceFromStart < nextTileCell.GetDistanceFromStart())
+                        {
+                            nextTileCell.SetDistanceFromStart(distanceFromStart);
+                            nextTileCell.SetPrevTileCell(command.tileCell);
+
+                            sTileHeuristicInfo nextCommand;
+                            nextCommand.tileCell = nextTileCell;
+                            nextCommand.heuristic = heuristic;
+                            PushSortmoveRangeQueue(nextCommand);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    void SettingTilePath()
+    {
+        TileMap map = GameManager.Instance.GetMap();
+        map.ResetVisit();
+
+        TileCell startTileCell = map.GetTileCell(_character.GetTileX(), _character.GetTileY());
+        startTileCell.SetPrevTileCell(null);
+        sTileHeuristicInfo startCmd;
+        startCmd.tileCell = startTileCell;
+        startCmd.heuristic = 0.0f;
+        _tileInfoQueue.Add(startCmd);
+
+        while (0 != _tileInfoQueue.Count)
+        {
+            sTileHeuristicInfo command = _tileInfoQueue[0];
+            _tileInfoQueue.RemoveAt(0);
+            //가져온 커맨드의 현재 타일셀 방문 표시
+            if (false == command.tileCell.IsVisited())
+            {
+                if (_character.GetMoveRange() == command.tileCell.GetDistanceFromStart())
+                {
+                    _tileInfoQueue.Clear();
+                    return;
+                }
+                command.tileCell.SetVisit(true);
 
                 //4방향 next타일들 검사
                 for (int direction = (int)eMoveDirection.LEFT; direction < (int)eMoveDirection.DOWN + 1; direction++)
@@ -131,9 +186,9 @@ public class PlayerIdle : State
     }
     void DrawMovePath(TileCell targetTileCell)
     {
-        for (int i = 0; i < _movePossibleTileCellList.Count; i++)
+        for (int i = 0; i < _movePossibleTiles.Count; i++)
         {
-            _movePossibleTileCellList[i].Draw(Color.blue);
+            _movePossibleTiles[i].Draw(Color.blue);
         }
         TileCell pathTileCell = targetTileCell;
         while (null != pathTileCell)
@@ -144,8 +199,8 @@ public class PlayerIdle : State
     }
     void PushSortmoveRangeQueue(sTileHeuristicInfo command)
     {
-        _moveRangeQueue.Add(command);
-        _moveRangeQueue.Sort(delegate (sTileHeuristicInfo cmd, sTileHeuristicInfo nextCmd)
+        _tileInfoQueue.Add(command);
+        _tileInfoQueue.Sort(delegate (sTileHeuristicInfo cmd, sTileHeuristicInfo nextCmd)
         {
             return cmd.heuristic.CompareTo(nextCmd.heuristic);
         });

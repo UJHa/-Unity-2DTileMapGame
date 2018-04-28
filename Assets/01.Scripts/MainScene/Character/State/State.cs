@@ -15,6 +15,7 @@ public enum eStateType
 public class State
 {
     protected eStateType _nextState = eStateType.NONE;
+    protected eStateType _nowState = eStateType.NONE;
     protected Character _character;
 
     public void Init(Character character)
@@ -39,4 +40,5 @@ public class State
         _nextState = nextState;
     }
     public eStateType GetNextState() { return _nextState; }
+    public eStateType GetNowState() { return _nowState; }
 }

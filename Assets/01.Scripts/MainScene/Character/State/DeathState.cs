@@ -7,7 +7,7 @@ public class DeathState : State
     override public void Start()
     {
         base.Start();
-
+        _nowState = eStateType.DEATH;
         _character.SetCanMove(true);
         _character.gameObject.transform.localRotation = Quaternion.Euler(0.0f, 0.0f, 90.0f);
 
@@ -16,11 +16,13 @@ public class DeathState : State
         msgParam.receiver = _character.GetAttacker();
         msgParam.message = "IsDead";
 
-        MessageSystem.Instance.Send(msgParam);
+        //MessageSystem.Instance.Send(msgParam);
+
 
         _character.DropItem();
     }
     override public void Update()
     {
+        base.Update();
     }
 }

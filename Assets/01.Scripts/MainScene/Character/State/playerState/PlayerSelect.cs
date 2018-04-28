@@ -17,14 +17,12 @@ public class PlayerSelect : State
         {
             _nextState = eStateType.ATTACK;
             _character.SetActionCooltime(3.0f);
-            _character.ResetActionCooltime();
             return;
         }
         if(_character.IsClickWaitButton())
         {
             _nextState = eStateType.IDLE;
             _character.SetActionCooltime(1.0f);
-            _character.ResetActionCooltime();
             return;
         }
     }

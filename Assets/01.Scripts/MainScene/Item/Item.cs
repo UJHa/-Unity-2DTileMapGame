@@ -17,7 +17,7 @@ public class Item : MapObject
         switch (msgParam.message)
         {
             case "pick":
-                Debug.Log("I'm picked!");
+    
                 this.gameObject.SetActive(false);
                 break;
         }
