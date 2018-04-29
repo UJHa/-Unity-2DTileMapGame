@@ -38,24 +38,10 @@ public class AttackState : State
     override public void Start()
     {
         base.Start();
-        Vector3 bulletDirection = new Vector3(1.0f, 0.0f, 0.0f);
+        for (int i = 0; i < 12; i++)
         {
-            Quaternion bulletRotation = Quaternion.Euler(0f, 0f, 0.0f);
-            bulletDirection = bulletRotation * bulletDirection;
-            bulletDirection.Normalize();
-
-            // 탄 오브젝트 생성
-            GameObject gameobject = Resources.Load<GameObject>("Prefabs/Bullet/DefaultBullet");
-            GameObject bulletObject = GameObject.Instantiate(gameobject);
-            bulletObject.transform.SetParent(Camera.main.gameObject.transform);
-            bulletObject.transform.position = new Vector3(_character.GetTransform().position.x, _character.GetTransform().position.y, 0.0f);
-            bulletObject.transform.localScale = GameManager.Instance.GetMap().GetLocalScale();
-            Bullet bullet = bulletObject.GetComponent<Bullet>();
-            bullet.SetShooter(_character.gameObject.name);
-            bullet.MoveStart(bulletDirection);
-        }
-        {
-            Quaternion bulletRotation = Quaternion.Euler(0f, 0f, 30.0f);
+            Vector3 bulletDirection = new Vector3(1.0f, 0.0f, 0.0f);
+            Quaternion bulletRotation = Quaternion.Euler(0f, 0f, i * 30.0f);
             bulletDirection = bulletRotation * bulletDirection;
             bulletDirection.Normalize();
 

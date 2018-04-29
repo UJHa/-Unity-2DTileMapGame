@@ -30,7 +30,8 @@
   - Monster 상태 구성
     - idle : 행동 쿨타임 대기 후 이동 가능 타일 중 랜덤한 타겟 지정하여 moveState로 변경(0428완료)
     - move : 정해진 타겟으로 moveCooltime에 맞춰 이동 / 이동 완료 후 공격(attack으로), 대기(idle로) 중 랜덤하게 상태 변경(0428완료)
-    - attack : 360도 탄 발사
+    - attack : 360도 탄 발사(0428완료)
+    - 몬스터 1마리로 상태 변화 확인할 것
 - idle, playerIdle에서 캐릭터 movePossibleTiles 세팅을 1회만 하도록 변경(0429완료)
   - SettingTilePath()함수 기능 분리(0429완료)
     - 현재 이동 가능 타일배열을 세팅하는 기능, 각 tile들의 이전 경로를 저장시키는 기능이 합쳐져 있다.(0429완료)

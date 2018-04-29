@@ -37,7 +37,7 @@ public class Bullet : MapObject
     public void SetShooter(string name)
     {
         _shooterName = name;
-        Debug.Log(_shooterName);
+        //Debug.Log(_shooterName);
     }
     public string GetShooterName()
     {
