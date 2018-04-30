@@ -11,7 +11,7 @@ public class Player : Character
     }
     override protected void InitState()
     {
-        //base.InitState();
+        base.InitState();
         {
             //State state = new PathFindingIdle();
             State state = new PlayerIdle();
@@ -35,5 +35,14 @@ public class Player : Character
         }
         _state = _stateMap[eStateType.IDLE];
         _state.Start();
+    }
+    protected override void InitPosition()
+    {
+        TileMap map = GameManager.Instance.GetMap();
+        _tileX = 5;
+        _tileY = 5;
+        map.SetObject(_tileX, _tileY, this, eTileLayer.MIDDLE);
+
+        SetCanMove(false);
     }
 }

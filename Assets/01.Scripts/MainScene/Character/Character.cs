@@ -89,7 +89,7 @@ public class Character : MapObject
         InitState();
     }
 
-    void InitPosition()
+    virtual protected void InitPosition()
     {
         TileMap map = GameManager.Instance.GetMap();
         _tileX = Random.Range(1, map.GetWidth() - 2);
@@ -153,7 +153,7 @@ public class Character : MapObject
         }
         _state = _stateMap[eStateType.IDLE];
     }
-    private void ChangeState(eStateType nextState)
+    void ChangeState(eStateType nextState)
     {
         if (null != _state)
             _state.Stop();
@@ -315,7 +315,7 @@ public class Character : MapObject
     }
 
     //coolTime
-    protected float _actionCoolTime = 3.0f;
+    protected float _actionCoolTime = 1.0f;
     float _deltaActionCoolTime = 0.0f;
     public bool IsActionPossible()
     {

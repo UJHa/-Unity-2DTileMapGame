@@ -15,6 +15,7 @@ public class IdleState : State
     {
         base.Start();
         _character.ResetActionCooltime();
+        Debug.Log(_character + " : idle");
     }
     override public void Update()
     {
@@ -32,7 +33,6 @@ public class IdleState : State
         {
             SettingMovePossibleTiles();  //_movePossibleTiles 구하는 용
             int targetIndex = Random.Range(0, _movePossibleTiles.Count);
-            Debug.Log("몬스터 몇번째 칸으로? : " + _movePossibleTiles.Count);
             TileCell targetTileCell = _movePossibleTiles[targetIndex];
             _character.SetTargetTileCell(targetTileCell);
             SettingTilePath();  //target Astar 탐색용

@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Bullet : MapObject
 {
-    float _mainCameraWidth;
-    float _mainCameraHeight;
+    float _cameraWidth;
+    float _cameraHeight;
     // Use this for initialization
     void Start () {
         Camera cam = Camera.main;
-        _mainCameraHeight = 2.0f * cam.orthographicSize;
-        _mainCameraWidth = _mainCameraHeight * cam.aspect;
+        _cameraHeight = 2.0f * cam.orthographicSize;
+        _cameraWidth = _cameraHeight * cam.aspect;
+        Debug.Log(_cameraWidth);
+        Debug.Log(_cameraHeight);
+        Debug.Log(cam.transform.position);
     }
 	
 	// Update is called once per frame
@@ -19,8 +22,8 @@ public class Bullet : MapObject
 		if(isMove)
         {
             gameObject.transform.position += _bulletSpeed;
-            if(transform.localPosition.x > _mainCameraWidth / 2 || transform.localPosition.x < -_mainCameraWidth / 2
-                || transform.localPosition.y > _mainCameraHeight / 2 || transform.localPosition.y < -_mainCameraHeight / 2)
+            if(transform.position.x > _cameraWidth / 2 + Camera.main.transform.position.x || transform.position.x < -_cameraWidth / 2 + Camera.main.transform.position.x
+                || transform.position.y > _cameraHeight / 2 + Camera.main.transform.position.y || transform.position.y < -_cameraHeight / 2 + Camera.main.transform.position.y)
             {
                 Destroy(gameObject);
             }

@@ -15,6 +15,7 @@ public class MoveState : State
 
             pathTileCell = pathTileCell.GetPrevTileCell();
         }
+        Debug.Log(_character + " : move");
     }
     override public void Update()
     {
@@ -41,7 +42,10 @@ public class MoveState : State
             eMoveDirection direction = _character.GetDirection(curPosition, toPosition);
             _character.SetNextDirection(direction);
 
-            _character.MoveStart(nextTileCell.GetTileX(), nextTileCell.GetTileY());
+            if(!_character.MoveStart(nextTileCell.GetTileX(), nextTileCell.GetTileY()))
+            {
+                _nextState = eStateType.IDLE;
+            }
         }
         else
         {

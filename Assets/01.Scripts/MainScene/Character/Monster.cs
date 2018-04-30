@@ -10,8 +10,13 @@ public class Monster : Character
         //_attackCoolTime = 2.0f;
         _moveCoolTime = 2.0f;
     }
-    override protected void InitState()
+    protected override void InitPosition()
     {
-        base.InitState();
+        TileMap map = GameManager.Instance.GetMap();
+        _tileX = 6;
+        _tileY = 6;
+        map.SetObject(_tileX, _tileY, this, eTileLayer.MIDDLE);
+
+        SetCanMove(false);
     }
 }
