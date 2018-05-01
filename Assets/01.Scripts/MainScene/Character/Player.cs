@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Player : Character
 {
-    void Start()
+    override public void Init(string viewName)
     {
-        //_attackCooltime = 0.1f;
+        base.Init(viewName);
         _moveCooltime = 0.1f;
     }
     override protected void InitState()

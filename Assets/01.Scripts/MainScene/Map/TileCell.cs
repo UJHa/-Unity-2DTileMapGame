@@ -27,6 +27,10 @@ public class TileCell
         _position.x = x;
         _position.y = y;
     }
+    public Vector2 GetPosition()
+    {
+        return _position;
+    }
     //tile position
     private int _tileX;
     private int _tileY;

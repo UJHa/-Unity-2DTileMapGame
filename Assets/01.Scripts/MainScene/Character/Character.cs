@@ -59,9 +59,13 @@ public class Character : MapObject
     public void UpdateMoveCooltime()
     {
         if (_moveCooltime <= _deltaMoveCooltime)
-            _deltaMoveCooltime = _moveCooltime;
+        {
+
+        }
         else
+        {
             _deltaMoveCooltime += Time.deltaTime;
+        }
     }
     void UpdateGuage()
     {
@@ -111,9 +115,9 @@ public class Character : MapObject
 
 
 
-    eMoveDirection _nextDirection = eMoveDirection.NONE;
-    public eMoveDirection GetNextDirection() { return _nextDirection; }
-    public void SetNextDirection(eMoveDirection direction) { _nextDirection = direction; }
+    //eMoveDirection _nextDirection = eMoveDirection.NONE;
+    //public eMoveDirection GetNextDirection() { return _nextDirection; }
+    //public void SetNextDirection(eMoveDirection direction) { _nextDirection = direction; }
 
     override public void SetSortingOrder(eTileLayer layer, int sortingOrder)
     {
@@ -184,7 +188,7 @@ public class Character : MapObject
                 attackedPosition.x = msgParam.sender.GetTileX();
                 attackedPosition.y = msgParam.sender.GetTileY();
                 eMoveDirection direction = GetDirection(curPosition, attackedPosition);
-                SetNextDirection(direction);
+                //SetNextDirection(direction);
                 MoveStart(attackedPosition.x, attackedPosition.y);
                 _state.NextState(eStateType.DAMAGE);
                 break;
@@ -200,15 +204,6 @@ public class Character : MapObject
     public bool MoveStart(int moveX, int moveY)
     {
         ResetMoveCooltime();
-        string animationTrigger = "idle";
-        switch (_nextDirection)
-        {
-            case eMoveDirection.LEFT: animationTrigger = "left"; break;
-            case eMoveDirection.RIGHT: animationTrigger = "right"; break;
-            case eMoveDirection.UP: animationTrigger = "up"; break;
-            case eMoveDirection.DOWN: animationTrigger = "down"; break;
-        }
-        SetAnimation(animationTrigger);
 
         TileMap map = GameManager.Instance.GetMap();
 
@@ -343,7 +338,7 @@ public class Character : MapObject
     float _deltaMoveCooltime = 0.0f;
     public bool IsMovePossible()
     {
-        Debug.Log(_moveCooltime + ", " + _deltaMoveCooltime + ":" + (_moveCooltime <= _deltaMoveCooltime));
+        //Debug.Log(_moveCooltime + ", " + _deltaMoveCooltime + ":" + (_moveCooltime <= _deltaMoveCooltime));
         if (_moveCooltime <= _deltaMoveCooltime)
         {
             return true;
@@ -354,10 +349,9 @@ public class Character : MapObject
     {
         _deltaMoveCooltime = 0.0f;
     }
-
-    public float GetMoveDuration()
+    public float GetDeltaMoveRate()
     {
-        return _deltaMoveCooltime;
+        return _deltaMoveCooltime / _moveCooltime;
     }
 
     //pathfinding

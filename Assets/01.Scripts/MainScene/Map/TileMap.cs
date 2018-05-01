@@ -57,10 +57,15 @@ public class TileMap : MonoBehaviour
         //CreateRandomMaze();
     }
 
+    float _tileSize = 0.32f;
+    public float GetTileSize()
+    {
+        return _tileSize;
+    }
     void CreateTiles()
     {
         float scale = 1.0f; // 화면에 보이는 크기 배수
-        float tileSize = 32.0f * scale;
+        _tileSize = _tileSize * scale;
         _tileScale = new Vector3(scale, scale);
 
         //1층
@@ -93,7 +98,7 @@ public class TileMap : MonoBehaviour
                 _tileCellList[y,x] = new TileCell();
                 GetTileCell(x, y).Init();
                 //setPosition 합치기
-                GetTileCell(x, y).SetPosition(x * tileSize / 100.0f, - y * tileSize / 100.0f);
+                GetTileCell(x, y).SetPosition(x * _tileSize, - y * _tileSize);
                 GetTileCell(x, y).SetTilePosition(x, y);
 
                 GetTileCell(x, y).AddObject(eTileLayer.GROUND, tileObject);
