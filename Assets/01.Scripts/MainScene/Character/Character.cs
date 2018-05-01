@@ -152,6 +152,7 @@ public class Character : MapObject
             _stateMap[eStateType.DEATH] = state;
         }
         _state = _stateMap[eStateType.IDLE];
+        _state.Start();
     }
     void ChangeState(eStateType nextState)
     {

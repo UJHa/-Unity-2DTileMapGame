@@ -11,9 +11,9 @@ public class Bullet : MapObject
         Camera cam = Camera.main;
         _cameraHeight = 2.0f * cam.orthographicSize;
         _cameraWidth = _cameraHeight * cam.aspect;
-        Debug.Log(_cameraWidth);
-        Debug.Log(_cameraHeight);
-        Debug.Log(cam.transform.position);
+        //Debug.Log(_cameraWidth);
+        //Debug.Log(_cameraHeight);
+        //Debug.Log(cam.transform.position);
     }
 	
 	// Update is called once per frame
