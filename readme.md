@@ -37,10 +37,12 @@
     - 현재 이동 가능 타일배열을 세팅하는 기능, 각 tile들의 이전 경로를 저장시키는 기능이 합쳐져 있다.(0429완료)
 - playerIdle을 idleState 상속받도록 리펙토링(0429완료)
 - 탄 카메라 이동해도 따라가지 않게 하기(0430완료)
+- character idle 애니메이션 추가(0501완료)
+- moveCooltime 이동 보간
+  - deltaMoveCooltime을 moveState만 사용하도록 변경(0501완료)
+  - deltaMoveCooltime 값 증가로 생기는 다음 타일까지의 위치 값 변경
 - moveState시 이동할 타일 이동 불가 시 몬스터 텔레포트 현상 고치기
-  - 원인 : tileCell의 탐색 정보를 플레이어와 몬스터가 공유함
+  - 원인 : tileCell의 탐색 정보를 플레이어와 몬스터가 공유함(예상)
   - 해결법 : 각 캐릭터 별로 타일셀의 탐색정보를 가지도록 코드 변경할 것
 - damageState로 처리할지 character에서 처리할지 정할 것
 - 충돌 시 처리를 메세지 시스템을 사용할지 정하기
-- character idle 애니메이션 추가
-- moveCooltime 이동 보간
