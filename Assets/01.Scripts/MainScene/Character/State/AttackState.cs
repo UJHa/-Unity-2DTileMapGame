@@ -7,6 +7,7 @@ public class AttackState : State
     override public void Start()
     {
         base.Start();
+        _character.SetAnimation("idle");
         Debug.Log(_character + " : attack");
     }
     override public void Update()

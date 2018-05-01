@@ -44,31 +44,34 @@ public class Character : MapObject
 
 
         _state.Update();
-        UpdateCoolTime();
+        UpdateActionCooltime();
+        //UpdateCooltime();
 
         UpdateGuage();
     }
-    void UpdateCoolTime()
+    void UpdateActionCooltime()
     {
-        if (_actionCoolTime <= _deltaActionCoolTime)
-            _deltaActionCoolTime = _actionCoolTime;
+        if (_actionCooltime <= _deltaActionCooltime)
+            _deltaActionCooltime = _actionCooltime;
         else
-            _deltaActionCoolTime += Time.deltaTime;
-
-        if (_moveCoolTime <= _deltaMoveCoolTime)
-            _deltaMoveCoolTime = _moveCoolTime;
+            _deltaActionCooltime += Time.deltaTime;
+    }
+    public void UpdateMoveCooltime()
+    {
+        if (_moveCooltime <= _deltaMoveCooltime)
+            _deltaMoveCooltime = _moveCooltime;
         else
-            _deltaMoveCoolTime += Time.deltaTime;
+            _deltaMoveCooltime += Time.deltaTime;
     }
     void UpdateGuage()
     {
-        if (null == _hpGuage || null == _coolTimeGuage)
+        if (null == _hpGuage || null == _cooltimeGuage)
             return;
         _hpGuage.value = _hp / 100.0f;
-        _coolTimeGuage.value = _deltaActionCoolTime / _actionCoolTime;
+        _cooltimeGuage.value = _deltaActionCooltime / _actionCooltime;
     }
     GameObject _bulletDirection;
-    public void Init(string viewName)
+    virtual public void Init(string viewName)
     {
         //View를 붙인다.
         string filePath = "Prefabs/CharacterView/" + viewName;
@@ -77,6 +80,7 @@ public class Character : MapObject
         _characterView.transform.SetParent(transform);
         _characterView.transform.localPosition = Vector3.zero;
         _characterView.transform.localScale = GameManager.Instance.GetMap().GetLocalScale();
+        SetAnimation("idle");
 
         GameObject bulletDirectionPrefabs = Resources.Load<GameObject>("Prefabs/DirectionUI/BulletDirection");
         _bulletDirection = GameObject.Instantiate(bulletDirectionPrefabs);
@@ -196,7 +200,7 @@ public class Character : MapObject
     public bool MoveStart(int moveX, int moveY)
     {
         ResetMoveCooltime();
-        string animationTrigger = "down";
+        string animationTrigger = "idle";
         switch (_nextDirection)
         {
             case eMoveDirection.LEFT: animationTrigger = "left"; break;
@@ -204,8 +208,7 @@ public class Character : MapObject
             case eMoveDirection.UP: animationTrigger = "up"; break;
             case eMoveDirection.DOWN: animationTrigger = "down"; break;
         }
-
-        _characterView.GetComponent<Animator>().SetTrigger(animationTrigger);
+        SetAnimation(animationTrigger);
 
         TileMap map = GameManager.Instance.GetMap();
 
@@ -315,12 +318,12 @@ public class Character : MapObject
         //_textExp.text = "exp " + _myExp;
     }
 
-    //coolTime
-    protected float _actionCoolTime = 1.0f;
-    float _deltaActionCoolTime = 0.0f;
+    //cooltime
+    protected float _actionCooltime = 1.0f;
+    float _deltaActionCooltime = 0.0f;
     public bool IsActionPossible()
     {
-        if (_actionCoolTime <= _deltaActionCoolTime)
+        if (_actionCooltime <= _deltaActionCooltime)
         {
             return true;
         }
@@ -328,19 +331,20 @@ public class Character : MapObject
     }
     public void ResetActionCooltime()
     {
-        _deltaActionCoolTime = 0.0f;
+        _deltaActionCooltime = 0.0f;
     }
     public void SetActionCooltime(float second)
     {
-        _actionCoolTime = second;
-        _deltaActionCoolTime = second;
+        _actionCooltime = second;
+        _deltaActionCooltime = second;
     }
 
-    protected float _moveCoolTime = 1.0f;
-    float _deltaMoveCoolTime = 0.0f;
+    protected float _moveCooltime = 1.0f;
+    float _deltaMoveCooltime = 0.0f;
     public bool IsMovePossible()
     {
-        if (_moveCoolTime <= _deltaMoveCoolTime)
+        Debug.Log(_moveCooltime + ", " + _deltaMoveCooltime + ":" + (_moveCooltime <= _deltaMoveCooltime));
+        if (_moveCooltime <= _deltaMoveCooltime)
         {
             return true;
         }
@@ -348,7 +352,12 @@ public class Character : MapObject
     }
     void ResetMoveCooltime()
     {
-        _deltaMoveCoolTime = 0.0f;
+        _deltaMoveCooltime = 0.0f;
+    }
+
+    public float GetMoveDuration()
+    {
+        return _deltaMoveCooltime;
     }
 
     //pathfinding
@@ -371,16 +380,16 @@ public class Character : MapObject
         _hpGuage = hpGuage;
         _hpGuage.value = _hp / 100.0f;
     }
-    Slider _coolTimeGuage = null;
-    public void LinkActionCoolTimeGuage(Slider coolTimeGuage)
+    Slider _cooltimeGuage = null;
+    public void LinkActionCooltimeGuage(Slider cooltimeGuage)
     {
         GameObject canvasObject = transform.Find("Canvas").gameObject;
-        coolTimeGuage.transform.SetParent(canvasObject.transform);
-        coolTimeGuage.transform.localPosition = new Vector3(0.0f, -0.4f, 0.0f);
-        coolTimeGuage.transform.localScale = Vector3.one;
+        cooltimeGuage.transform.SetParent(canvasObject.transform);
+        cooltimeGuage.transform.localPosition = new Vector3(0.0f, -0.4f, 0.0f);
+        cooltimeGuage.transform.localScale = Vector3.one;
 
-        _coolTimeGuage = coolTimeGuage;
-        _coolTimeGuage.value = _deltaActionCoolTime / _actionCoolTime;
+        _cooltimeGuage = cooltimeGuage;
+        _cooltimeGuage.value = _deltaActionCooltime / _actionCooltime;
     }
     Text _textLevel = null;
     public void LinkTextLevel(Text text)
@@ -519,6 +528,12 @@ public class Character : MapObject
             }
         }
     }
+    //animation
+    public void SetAnimation(string animationTrigger)
+    {
+        _characterView.GetComponent<Animator>().SetTrigger(animationTrigger);
+    }
+
     //direction
     public GameObject GetDirectionUI()
     {

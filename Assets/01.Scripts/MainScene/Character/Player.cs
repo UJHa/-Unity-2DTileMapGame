@@ -6,8 +6,8 @@ public class Player : Character
 {
     void Start()
     {
-        //_attackCoolTime = 0.1f;
-        _moveCoolTime = 0.1f;
+        //_attackCooltime = 0.1f;
+        _moveCooltime = 0.1f;
     }
     override protected void InitState()
     {

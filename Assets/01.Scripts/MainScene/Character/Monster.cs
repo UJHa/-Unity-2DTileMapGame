@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Monster : Character
 {
-    void Start()
+    override public void Init(string viewName)
     {
+        base.Init(viewName);
         _type = eMapObjectType.MONSTER;
-        //_attackCoolTime = 2.0f;
-        _moveCoolTime = 2.0f;
+        _moveCooltime = 2.0f;
     }
     protected override void InitPosition()
     {

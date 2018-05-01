@@ -2,29 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMove : State
+public class PlayerMove : MoveState
 {
-    Stack<TileCell> _pathfindingStack = new Stack<TileCell>();
-    override public void Start()
-    {
-        base.Start();
-        TileCell pathTileCell = _character.GetTargetTileCell();
-        while (null != pathTileCell.GetPrevTileCell())
-        {
-            _pathfindingStack.Push(pathTileCell);
-
-            pathTileCell = pathTileCell.GetPrevTileCell();
-        }
-    }
-    override public void Update()
-    {
-        base.Update();
-        if (_character.IsMovePossible())
-        {
-            UpdateMove();
-        }
-    }
-    void UpdateMove()
+    override protected void MoveNextTile()
     {
         if (0 != _pathfindingStack.Count)
         {
@@ -40,18 +20,14 @@ public class PlayerMove : State
 
             eMoveDirection direction = _character.GetDirection(curPosition, toPosition);
             _character.SetNextDirection(direction);
-
-            _character.MoveStart(nextTileCell.GetTileX(), nextTileCell.GetTileY());
+            if (!_character.MoveStart(nextTileCell.GetTileX(), nextTileCell.GetTileY()))
+            {
+                _nextState = eStateType.SELECT;
+            }
         }
         else
         {
             _nextState = eStateType.SELECT;
         }
-    }
-    public override void Stop()
-    {
-        base.Stop();
-        _character.SetTargetTileCell(null);
-        _pathfindingStack.Clear();
     }
 }

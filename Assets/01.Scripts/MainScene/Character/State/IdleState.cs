@@ -15,6 +15,7 @@ public class IdleState : State
     {
         base.Start();
         _character.ResetActionCooltime();
+        _character.SetAnimation("idle");
         Debug.Log(_character + " : idle");
     }
     override public void Update()

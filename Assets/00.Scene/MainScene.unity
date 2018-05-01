@@ -374,7 +374,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HPGuagePrefabs: {fileID: 1158744883361508, guid: 20ac14297b0e6674b89f1a3bcf1a9716,
     type: 2}
-  coolTimeGuagePrefabs: {fileID: 1158744883361508, guid: 18827f7adf7154a42a088a9eca95e065,
+  cooltimeGuagePrefabs: {fileID: 1158744883361508, guid: 18827f7adf7154a42a088a9eca95e065,
     type: 2}
   levelTextPrefabs: {fileID: 1323093737090538, guid: 8b7583dbd8a5ce54188420720d11b0cf,
     type: 2}

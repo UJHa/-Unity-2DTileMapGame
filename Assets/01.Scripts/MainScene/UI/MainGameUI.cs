@@ -21,11 +21,11 @@ public class MainGameUI : MonoBehaviour
 
         return slider;
     }
-    public GameObject coolTimeGuagePrefabs;
-    public Slider CreateCoolTimeSlider()
+    public GameObject cooltimeGuagePrefabs;
+    public Slider CreateCooltimeSlider()
     {
-        GameObject coolTimeObject = GameObject.Instantiate(coolTimeGuagePrefabs);
-        Slider slider = coolTimeObject.GetComponent<Slider>();
+        GameObject cooltimeObject = GameObject.Instantiate(cooltimeGuagePrefabs);
+        Slider slider = cooltimeObject.GetComponent<Slider>();
 
         return slider;
     }

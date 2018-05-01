@@ -8,6 +8,7 @@ public class PlayerSelect : State
     {
         base.Start();
         _character.SetSelectUI(true);
+        _character.SetAnimation("idle");
     }
     override public void Update()
     {

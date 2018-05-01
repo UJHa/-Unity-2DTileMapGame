@@ -70,8 +70,8 @@ public class MainGameScene : MonoBehaviour {
         Slider hpGuage = GameUI.CreateHPSlider();
         character.LinkHPGuage(hpGuage);
 
-        Slider coolTimeGuage = GameUI.CreateCoolTimeSlider();
-        character.LinkActionCoolTimeGuage(coolTimeGuage);
+        Slider cooltimeGuage = GameUI.CreateCooltimeSlider();
+        character.LinkActionCooltimeGuage(cooltimeGuage);
 
         Text textLevel = GameUI.CreateLevelText();
         character.LinkTextLevel(textLevel);
