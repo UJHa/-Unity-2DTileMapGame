@@ -45,6 +45,7 @@
   - 원인 : tileCell의 탐색 정보를 플레이어와 몬스터가 공유함(예상)
      ->>IdleState 탐색 기능 변경
   - 해결법 : 각 캐릭터 별로 타일셀의 탐색정보를 가지도록 코드 변경할 것
+- 플레이어 탄 색상 변경
 - GetTransform 제거 >> setPosition의 기능 중복
 - damageState로 처리할지 character에서 처리할지 정할 것
 - 충돌 시 처리를 메세지 시스템을 사용할지 정하기
