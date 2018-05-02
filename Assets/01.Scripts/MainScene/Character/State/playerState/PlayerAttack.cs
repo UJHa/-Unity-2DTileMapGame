@@ -25,7 +25,7 @@ public class PlayerAttack : State
             //bulletDirection.Normalize();
 
             // 탄 오브젝트 생성
-            GameObject gameobject = Resources.Load<GameObject>("Prefabs/Bullet/DefaultBullet");
+            GameObject gameobject = Resources.Load<GameObject>("Prefabs/Bullet/PlayerBullet");
             GameObject bulletObject = GameObject.Instantiate(gameobject);
             //bulletObject.transform.SetParent(Camera.main.gameObject.transform);
             bulletObject.transform.position = new Vector3(_character.GetTransform().position.x, _character.GetTransform().position.y, 0.0f);

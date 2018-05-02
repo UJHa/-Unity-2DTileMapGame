@@ -82,7 +82,7 @@ public class MainGameScene : MonoBehaviour {
         Button waitButton = GameUI.CreateWaitButton();
         character.LinkWaitButton(waitButton);
 
-        character.SetCanvasLayer(eTileLayer.MIDDLE);
+        character.SetCanvasLayer(eTileLayer.UI);
         return character;
     }
 }
