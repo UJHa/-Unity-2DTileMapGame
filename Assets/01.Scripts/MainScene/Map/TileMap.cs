@@ -304,13 +304,14 @@ public class TileMap : MonoBehaviour
         return tileCell.CanMove();
     }
 
-    public List<MapObject> GetCollisionList(int tileX, int tileY)
+    public List<MapObject> GetCollisionList(TileCell tileCell)
     {
+        int tileX = tileCell.GetTileX();
+        int tileY = tileCell.GetTileY();
         if (tileX < 0 || _width <= tileX)
             return null;
         if (tileY < 0 || _height <= tileY)
             return null;
-        TileCell tileCell = GetTileCell(tileX, tileY);
         return tileCell.GetCollisionList();
     }
 
@@ -326,14 +327,14 @@ public class TileMap : MonoBehaviour
     }
 
     //pathFinding
-    public void ResetVisit()
+    public void ResetVisit(Character character)
     {
         for (int y = 0; y < _height; y++)
         {
             for (int x = 0; x < _width; x++)
             {
                 //GetTileCell(x, y).SetVisit(false);
-                GetTileCell(x, y).ResetPathFinding();
+                GetTileCell(x, y).ResetPathFinding(character);
             }
         }
     }

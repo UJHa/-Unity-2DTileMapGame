@@ -189,7 +189,7 @@ public class Character : MapObject
                 attackedPosition.y = msgParam.sender.GetTileY();
                 eMoveDirection direction = GetDirection(curPosition, attackedPosition);
                 //SetNextDirection(direction);
-                MoveStart(attackedPosition.x, attackedPosition.y);
+                //MoveStart(attackedPosition.x, attackedPosition.y);
                 _state.NextState(eStateType.DAMAGE);
                 break;
             case "IsDead":
@@ -201,33 +201,31 @@ public class Character : MapObject
     }
 
     // Actions
-    public bool MoveStart(int moveX, int moveY)
+    public void MoveTileCell(TileCell tileCell)
     {
         ResetMoveCooltime();
 
         TileMap map = GameManager.Instance.GetMap();
 
-        List<MapObject> collisionList = map.GetCollisionList(moveX, moveY);
-        if (null != collisionList && 0 == collisionList.Count) //이동 가능할때
-        {
-            map.ResetObject(_tileX, _tileY, this);
-            _tileX = moveX;
-            _tileY = moveY;
-            map.SetObject(_tileX, _tileY, this, eTileLayer.MIDDLE);
-            //pick message 주기
-            List<MapObject> mapObejctList = map.GetTileCell(_tileX, _tileY).GetMapObjectList(eTileLayer.MIDDLE);
-            for (int i = 0; i < mapObejctList.Count; i++)
-            {
-                MessageParam msgParam = new MessageParam();
-                msgParam.sender = this;
-                msgParam.receiver = mapObejctList[i];
-                msgParam.message = "pick";
+        int moveX = tileCell.GetTileX();
+        int moveY = tileCell.GetTileY();
 
-                MessageSystem.Instance.Send(msgParam);
-            }
-            return true;
+        map.ResetObject(_tileX, _tileY, this);
+        _tileX = moveX;
+        _tileY = moveY;
+        map.SetObject(_tileX, _tileY, this, eTileLayer.MIDDLE);
+        //pick message 주기
+        List<MapObject> mapObejctList = map.GetTileCell(_tileX, _tileY).GetMapObjectList(eTileLayer.MIDDLE);
+        for (int i = 0; i < mapObejctList.Count; i++)
+        {
+            MessageParam msgParam = new MessageParam();
+            msgParam.sender = this;
+            msgParam.receiver = mapObejctList[i];
+            msgParam.message = "pick";
+
+            MessageSystem.Instance.Send(msgParam);
         }
-        return false;
+
     }
     public void Attack(MapObject enemy)
     {
@@ -506,9 +504,13 @@ public class Character : MapObject
         }
         return position;
     }
-    public Transform GetTransform()
+    //public Transform GetTransform()
+    //{
+    //    return gameObject.transform;
+    //}
+    public Vector2 GetPosition()
     {
-        return gameObject.transform;
+        return gameObject.transform.position;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {

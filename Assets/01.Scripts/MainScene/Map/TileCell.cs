@@ -95,18 +95,39 @@ public class TileCell
         return _mapObjectMap[(int)layer];
     }
     //visit
-    public void ResetPathFinding()
+    protected struct sTilePathFindInfo
     {
-        SetVisit(false);
-        _distanceStart = 0.0f;
-        _prevTileCell = null;
+        public bool isVisit;
+        public float distanceStart;
+        public TileCell prevTileCell;
     }
-    private bool _isVisit;
-    public void SetVisit(bool isVisited)
+    Dictionary<Character, sTilePathFindInfo> _pathFindInfo = new Dictionary<Character, sTilePathFindInfo>();
+    //Dictionary<Character, bool> _isCharacterVisit;
+    public void ResetPathFinding(Character character)
     {
-        _isVisit = isVisited;
+        sTilePathFindInfo tilePathFindInfo;
+        tilePathFindInfo.isVisit = false;
+        tilePathFindInfo.distanceStart = 0.0f;
+        tilePathFindInfo.prevTileCell = null;
+        _pathFindInfo[character] = tilePathFindInfo;
+
+        //SetVisit(character, false);
+        //_distanceStart = 0.0f;
+        //_prevTileCell = null;
     }
-    public bool IsVisited() { return _isVisit; }
+    //bool _isVisit;
+    public void SetVisit(Character character, bool isVisited)
+    {
+        //_isVisit = isVisited;
+        sTilePathFindInfo tilePathFindInfo = _pathFindInfo[character];
+        tilePathFindInfo.isVisit = isVisited;
+        _pathFindInfo[character] = tilePathFindInfo;
+    }
+    public bool IsVisited(Character character)
+    {
+        //return _isVisit;
+        return _pathFindInfo[character].isVisit;
+    }
 
     public bool IsPathfindable()
     {
@@ -128,27 +149,34 @@ public class TileCell
         List<MapObject> objectList = _mapObjectMap[(int)eTileLayer.GROUND];
         objectList[0].GetComponent<SpriteRenderer>().color = color;
     }
-    private float _distanceStart = 0.0f;
-    private float _distanceWeight = 1.0f;
-    public float GetDistanceFromStart()
+    //float _distanceStart = 0.0f;
+    public float GetDistanceFromStart(Character character)
     {
-        return _distanceStart;
+        //return _distanceStart;
+        return _pathFindInfo[character].distanceStart;
     }
+    float _distanceWeight = 1.0f;
     public float GetDistanceFromWeight()
     {
         return _distanceWeight;
     }
-    public void SetDistanceFromStart(float distance)
+    public void SetDistanceFromStart(Character character, float distance)
     {
-        _distanceStart = distance;
+        //_distanceStart = distance;
+        sTilePathFindInfo tilePathFindInfo = _pathFindInfo[character];
+        tilePathFindInfo.distanceStart = distance;
+        _pathFindInfo[character] = tilePathFindInfo;
     }
-    private TileCell _prevTileCell;
-    public void SetPrevTileCell(TileCell prevTileCell)
+    //TileCell _prevTileCell;
+    public void SetPrevTileCell(Character character, TileCell prevTileCell)
     {
-        _prevTileCell = prevTileCell;
+        //_prevTileCell = prevTileCell;
+        sTilePathFindInfo tilePathFindInfo = _pathFindInfo[character];
+        tilePathFindInfo.prevTileCell = prevTileCell;
+        _pathFindInfo[character] = tilePathFindInfo;
     }
-    public TileCell GetPrevTileCell()
+    public TileCell GetPrevTileCell(Character character)
     {
-        return _prevTileCell;
+        return _pathFindInfo[character].prevTileCell;
     }
 }

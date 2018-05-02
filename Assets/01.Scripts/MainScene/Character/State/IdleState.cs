@@ -43,10 +43,10 @@ public class IdleState : State
     protected void SettingMovePossibleTiles()
     {
         TileMap map = GameManager.Instance.GetMap();
-        map.ResetVisit();
+        map.ResetVisit(_character);
 
         TileCell startTileCell = map.GetTileCell(_character.GetTileX(), _character.GetTileY());
-        startTileCell.SetPrevTileCell(null);
+        startTileCell.SetPrevTileCell(_character, null);
         sTileHeuristicInfo startCmd;
         startCmd.tileCell = startTileCell;
         startCmd.heuristic = 0.0f;
@@ -57,14 +57,14 @@ public class IdleState : State
             sTileHeuristicInfo command = _tileInfoQueue[0];
             _tileInfoQueue.RemoveAt(0);
             //가져온 커맨드의 현재 타일셀 방문 표시
-            if (false == command.tileCell.IsVisited())
+            if (false == command.tileCell.IsVisited(_character))
             {
-                if (_character.GetMoveRange() == command.tileCell.GetDistanceFromStart())
+                if (_character.GetMoveRange() == command.tileCell.GetDistanceFromStart(_character))
                 {
                     _tileInfoQueue.Clear();
                     return;
                 }
-                command.tileCell.SetVisit(true);
+                command.tileCell.SetVisit(_character, true);
                 _movePossibleTiles.Add(command.tileCell);
 
                 //4방향 next타일들 검사
@@ -77,15 +77,15 @@ public class IdleState : State
 
                     TileCell nextTileCell = map.GetTileCell(nextPosition.x, nextPosition.y);
                     // nextTileCell 방문 안했고, 움직일수 있는 타일일때
-                    if (null != nextTileCell && true == nextTileCell.IsPathfindable() && false == nextTileCell.IsVisited())
+                    if (null != nextTileCell && true == nextTileCell.IsPathfindable() && false == nextTileCell.IsVisited(_character))
                     {
-                        float distanceFromStart = command.tileCell.GetDistanceFromStart() + nextTileCell.GetDistanceFromWeight();
+                        float distanceFromStart = command.tileCell.GetDistanceFromStart(_character) + nextTileCell.GetDistanceFromWeight();
                         float heuristic = distanceFromStart;
 
-                        if (null == nextTileCell.GetPrevTileCell() || distanceFromStart < nextTileCell.GetDistanceFromStart())
+                        if (null == nextTileCell.GetPrevTileCell(_character) || distanceFromStart < nextTileCell.GetDistanceFromStart(_character))
                         {
-                            nextTileCell.SetDistanceFromStart(distanceFromStart);
-                            nextTileCell.SetPrevTileCell(command.tileCell);
+                            nextTileCell.SetDistanceFromStart(_character, distanceFromStart);
+                            nextTileCell.SetPrevTileCell(_character, command.tileCell);
 
                             sTileHeuristicInfo nextCommand;
                             nextCommand.tileCell = nextTileCell;
@@ -100,10 +100,10 @@ public class IdleState : State
     protected void SettingTilePath()
     {
         TileMap map = GameManager.Instance.GetMap();
-        map.ResetVisit();
+        map.ResetVisit(_character);
 
         TileCell startTileCell = map.GetTileCell(_character.GetTileX(), _character.GetTileY());
-        startTileCell.SetPrevTileCell(null);
+        startTileCell.SetPrevTileCell(_character, null);
         sTileHeuristicInfo startCmd;
         startCmd.tileCell = startTileCell;
         startCmd.heuristic = 0.0f;
@@ -114,14 +114,14 @@ public class IdleState : State
             sTileHeuristicInfo command = _tileInfoQueue[0];
             _tileInfoQueue.RemoveAt(0);
             //가져온 커맨드의 현재 타일셀 방문 표시
-            if (false == command.tileCell.IsVisited())
+            if (false == command.tileCell.IsVisited(_character))
             {
-                if (_character.GetMoveRange() == command.tileCell.GetDistanceFromStart())
+                if (_character.GetMoveRange() == command.tileCell.GetDistanceFromStart(_character))
                 {
                     _tileInfoQueue.Clear();
                     return;
                 }
-                command.tileCell.SetVisit(true);
+                command.tileCell.SetVisit(_character, true);
 
                 //4방향 next타일들 검사
                 for (int direction = (int)eMoveDirection.LEFT; direction < (int)eMoveDirection.DOWN + 1; direction++)
@@ -133,19 +133,19 @@ public class IdleState : State
 
                     TileCell nextTileCell = map.GetTileCell(nextPosition.x, nextPosition.y);
                     // nextTileCell 방문 안했고, 움직일수 있는 타일일때
-                    if (null != nextTileCell && true == nextTileCell.IsPathfindable() && false == nextTileCell.IsVisited())
+                    if (null != nextTileCell && true == nextTileCell.IsPathfindable() && false == nextTileCell.IsVisited(_character))
                     {
-                        float distanceFromStart = command.tileCell.GetDistanceFromStart() + nextTileCell.GetDistanceFromWeight();
+                        float distanceFromStart = command.tileCell.GetDistanceFromStart(_character) + nextTileCell.GetDistanceFromWeight();
                         float heuristic = distanceFromStart;
                         if (null != _character.GetTargetTileCell())
                         {
                             heuristic = CalcAStarHeuristic(distanceFromStart, nextTileCell, _character.GetTargetTileCell());
                         }
 
-                        if (null == nextTileCell.GetPrevTileCell() || distanceFromStart < nextTileCell.GetDistanceFromStart())
+                        if (null == nextTileCell.GetPrevTileCell(_character) || distanceFromStart < nextTileCell.GetDistanceFromStart(_character))
                         {
-                            nextTileCell.SetDistanceFromStart(distanceFromStart);
-                            nextTileCell.SetPrevTileCell(command.tileCell);
+                            nextTileCell.SetDistanceFromStart(_character, distanceFromStart);
+                            nextTileCell.SetPrevTileCell(_character, command.tileCell);
 
                             sTileHeuristicInfo nextCommand;
                             nextCommand.tileCell = nextTileCell;

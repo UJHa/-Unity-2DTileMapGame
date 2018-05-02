@@ -68,7 +68,7 @@ public class PlayerIdle : IdleState
         while (null != pathTileCell)
         {
             pathTileCell.Draw(Color.red);
-            pathTileCell = pathTileCell.GetPrevTileCell();
+            pathTileCell = pathTileCell.GetPrevTileCell(_character);
         }
     }
 }

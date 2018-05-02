@@ -12,7 +12,7 @@ public class PlayerAttack : State
     override public void Update()
     {
         base.Update();
-        Vector3 bulletDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - _character.GetTransform().position;
+        Vector3 bulletDirection = Camera.main.ScreenToWorldPoint(Input.mousePosition) - (Vector3)_character.GetPosition();
         bulletDirection.z = 0.0f;
         bulletDirection.Normalize();
 
@@ -28,11 +28,11 @@ public class PlayerAttack : State
             GameObject gameobject = Resources.Load<GameObject>("Prefabs/Bullet/PlayerBullet");
             GameObject bulletObject = GameObject.Instantiate(gameobject);
             //bulletObject.transform.SetParent(Camera.main.gameObject.transform);
-            bulletObject.transform.position = new Vector3(_character.GetTransform().position.x, _character.GetTransform().position.y, 0.0f);
+            bulletObject.transform.position = new Vector3(_character.GetPosition().x, _character.GetPosition().y, 0.0f);
             bulletObject.transform.localScale = GameManager.Instance.GetMap().GetLocalScale();
             Bullet bullet = bulletObject.GetComponent<Bullet>();
             bullet.SetShooter(_character.gameObject.name);
-            bullet.MoveStart(bulletDirection);
+            bullet.MoveBullet(bulletDirection);
 
             // 마우스 위치의 각도 지정(다른 업데이트에서 처리)
 

@@ -31,7 +31,7 @@ public class Bullet : MapObject
 	}
     Vector3 _bulletSpeed;
     bool isMove = false;
-    public void MoveStart(Vector3 speed)
+    public void MoveBullet(Vector3 speed)
     {
         _bulletSpeed = speed * 0.01f;
         isMove = true;

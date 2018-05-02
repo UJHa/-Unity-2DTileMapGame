@@ -25,11 +25,11 @@ public class AttackState : State
             GameObject gameobject = Resources.Load<GameObject>("Prefabs/Bullet/DefaultBullet");
             GameObject bulletObject = GameObject.Instantiate(gameobject);
             //bulletObject.transform.SetParent(Camera.main.gameObject.transform);
-            bulletObject.transform.position = new Vector3(_character.GetTransform().position.x, _character.GetTransform().position.y, 0.0f);
+            bulletObject.transform.position = new Vector3(_character.GetPosition().x, _character.GetPosition().y, 0.0f);
             bulletObject.transform.localScale = GameManager.Instance.GetMap().GetLocalScale();
             Bullet bullet = bulletObject.GetComponent<Bullet>();
             bullet.SetShooter(_character.gameObject.name);
-            bullet.MoveStart(bulletDirection);
+            bullet.MoveBullet(bulletDirection);
         }
         _nextState = eStateType.IDLE;
     }
